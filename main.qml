@@ -9,12 +9,13 @@ ApplicationWindow {
     height: 480
     title: qsTr("Concilia")
 
-    minimumHeight: swipeView.implicitHeight
-    minimumWidth: swipeView.implicitWidth
+    //minimumHeight: swipeView.implicitHeight
+    //minimumWidth: swipeView.implicitWidth
 
     SwipeView {
         id: swipeView
-        anchors.fill: parent
+        width: window.width
+        height: window.height
         RegistrationPane { id: registration }
         RecordPane { id: record }
         ReportPane { id: report }
@@ -30,18 +31,24 @@ ApplicationWindow {
         states: State {
             name: "visible"
             when: inputPanel.active
-            PropertyChanges {
-                target: inputPanel
-                y: window.height - inputPanel.height
-            }
+            PropertyChanges { target: inputPanel; y: window.height - inputPanel.height }
+            PropertyChanges { target: swipeView; height: window.height - inputPanel.height }
         }
+
         transitions: Transition {
             from: ""
             to: "visible"
             reversible: true
             ParallelAnimation {
                 NumberAnimation {
-                    properties: "y"
+                    target: inputPanel
+                    property: "y"
+                    duration: 250
+                    easing.type: Easing.InOutQuad
+                }
+                NumberAnimation {
+                    target: swipeView
+                    property: "height"
                     duration: 250
                     easing.type: Easing.InOutQuad
                 }
