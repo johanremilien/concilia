@@ -1,4 +1,4 @@
-QT += quick virtualkeyboard
+QT += quick virtualkeyboard sql
 
 CONFIG += c++11
 
@@ -14,7 +14,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp
+        main.cpp \
+        meeting.cpp \
+        meetingsregister.cpp \
+        participant.cpp \
+        participantsregister.cpp \
+        register.cpp \
+        speakingtimeanalyser.cpp \
+        speakingtimerecorder.cpp
 
 RESOURCES += qml.qrc
 
@@ -31,3 +38,13 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+HEADERS += \
+    meeting.h \
+    meetingsregister.h \
+    participant.h \
+    participantsregister.h \
+    register.h \
+    speakingtimeanalyser.h \
+    speakingtimerecorder.h \
+    typedef.h
