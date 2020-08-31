@@ -1,12 +1,17 @@
 #include "meetingsregister.h"
 #include "meeting.h"
 
+const Meeting &MeetingsRegister::create()
+{
+    Meeting *meeting = new Meeting(m_counter++);
+    return **(m_register.insert(meeting->getId(), meeting));
+}
+
 const Meeting &MeetingsRegister::create(const QString &name)
 {
     const Meeting *result;
-    if (name.isEmpty() || get(name).isEmpty()) {
-        Meeting * meeting = new Meeting(name, m_counter++);
-        result = *(m_register.insert(meeting->getId(), meeting));
+    if (name.isEmpty() || find(name).isEmpty()) {
+        result = &create();
     } else {
         QLatin1Char separartor('_');
         bool isInteger;
@@ -20,16 +25,12 @@ const Meeting &MeetingsRegister::create(const QString &name)
     return *result;
 }
 
-Meetings MeetingsRegister::get(const QString &name)
+Meetings MeetingsRegister::find(const QString &name) const
 {
-    Meetings list;
-    if (name.isEmpty()) {
-        list = m_register.values();
-    } else {
-        for (const auto & meeting : m_register) {
-            if (meeting->getName() == name)
-                list.append(meeting);
-        }
+    Meetings vector;
+    for (auto & meeting : m_register) {
+        if (name.isEmpty() || meeting->getName() == name)
+            vector.append(meeting);
     }
-    return list;
+    return vector;
 }

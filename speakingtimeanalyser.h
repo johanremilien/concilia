@@ -6,13 +6,14 @@
 #include "typedef.h"
 
 
-class SpeakingTimeAnalyser
+class SpeakingTimeAnalyser : public QObject
 {
+    Q_OBJECT
 public:
-    SpeakingTimeAnalyser();
+    SpeakingTimeAnalyser(QObject * parent = nullptr);
 
-   RegisterHash<Meeting> getMeetings();
-   RegisterHash<Participant> getParticipants();
+   RegisterVector<Meeting> getMeetings();
+   RegisterVector<Participant> getParticipants();
 };
 
 #endif // SPEAKINGTIMEANALYSER_H

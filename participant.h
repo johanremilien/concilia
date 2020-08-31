@@ -5,7 +5,9 @@
 #include <QVector>
 
 #include "typedef.h"
-#include "participantsregister.h"
+
+class ParticipantsRegister;
+class SpeakingTimeRecorder;
 
 class Participant
 {
@@ -14,27 +16,30 @@ public:
     const QString &getFirstName() const;
     const QString &getLastName() const;
     void toggleSpeakingState();
-    duration getTotalSpeakingTime() const;
+    duration getTotalSpeakingTime(id meetingID = m_currentMeetingID) const;
+    static void setCurrentMeetingID(id meetingID);
 
-    friend const Participant &ParticipantsRegister::create();
+    friend class ParticipantsRegister;
+    friend class SpeakingTimeRecorder;
 
 protected:
-    Participant(id id = UNDEFINED_ID);
+    explicit Participant(id id = UNDEFINED_ID);
     Participant(const QString &firstName, const QString &lastName, id id = UNDEFINED_ID);
     ~Participant();
     id setId(id id);
     const QString &setFirstName(const QString &firstName);
     const QString &setLastName(const QString &lastName);
-    void takePartInMeeting(id meetingID);
+    const Participant &rename(const QString &firstName, const QString &lastName);
+    inline void takePartInCurrentMeeting();
     void setIsSpeaking(bool isSpeaking);
 
 private:
     id m_id;
-    id m_meetingID;
     QString m_firstName;
     QString m_lastName;
     bool m_isSpeaking;
-    //Records m_records;
+    RecordVectorHash m_records;
+    static id m_currentMeetingID;
 };
 
 #endif // PARTICIPANT_H

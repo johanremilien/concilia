@@ -8,9 +8,13 @@ class Meeting;
 class MeetingsRegister : public Register<Meeting>
 {
 public:
-    MeetingsRegister();
-    const Meeting &create(const QString &name = QString());
-    Meetings get(const QString &name);
+    const Meeting &create(const QString &name);
+    Meetings find(const QString &name) const;
+
+    friend class Register<Meeting>;
+
+protected:
+    const Meeting &create();
 };
 
 
