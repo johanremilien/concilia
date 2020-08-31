@@ -1,16 +1,20 @@
 #include "speakingtimeanalyser.h"
 
-SpeakingTimeAnalyser::SpeakingTimeAnalyser()
+#include "meetingsregister.h"
+#include "participantsregister.h"
+
+SpeakingTimeAnalyser::SpeakingTimeAnalyser(QObject *parent) :
+    QObject(parent)
 {
 
 }
 
-RegisterHash<Meeting> SpeakingTimeAnalyser::getMeetings()
+RegisterVector<Meeting> SpeakingTimeAnalyser::getMeetings()
 {
-
+    //return MeetingsRegister::instance().getRegisterVector();
 }
 
-RegisterHash<Participant> SpeakingTimeAnalyser::getParticipants()
+RegisterVector<Participant> SpeakingTimeAnalyser::getParticipants()
 {
-
+    //return ParticipantsRegister::instance().getRegisterVector();
 }

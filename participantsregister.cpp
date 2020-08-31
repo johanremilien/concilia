@@ -3,30 +3,45 @@
 
 const Participant &ParticipantsRegister::create()
 {
-    const Participant * participant = new Participant(m_counter++);
+    Participant *participant = new Participant(m_counter++);
     return **(m_register.insert(participant->getId(), participant));
 }
 
-Participants ParticipantsRegister::get(QString firstName, QString lastName)
+const Participant &ParticipantsRegister::create(const QString &firstName, const QString &lastName)
 {
-    Participants list;
-    if (firstName.isEmpty() && lastName.isEmpty()) {
-        list = m_register.values();
-    } else if (firstName.isEmpty() && !lastName.isEmpty()) {
-        for (const auto & participant : m_register) {
-            if (participant->getFirstName() == firstName)
-                list.append(participant);
+    return rename(create().getId(), firstName, lastName);
+}
+
+Participants ParticipantsRegister::find(const QString &firstName, const QString &lastName) const
+{
+    Participants vector;
+    for (auto & participant : m_register) {
+        if (firstName.isEmpty() && !lastName.isEmpty()) {
+            if (participant->getFirstName() != firstName)
+                continue;
+        } else if (!firstName.isEmpty() && lastName.isEmpty()) {
+            if (participant->getLastName() != lastName)
+                continue;
+        } else if (!firstName.isEmpty() && !lastName.isEmpty()) {
+            if (participant->getFirstName() != firstName || participant->getLastName() != lastName)
+                continue;
         }
-    } else if (!firstName.isEmpty() && lastName.isEmpty()) {
-        for (const auto & participant : m_register) {
-            if (participant->getLastName() == lastName)
-                list.append(participant);
-        }
-    } else {
-        for (const auto & participant : m_register) {
-            if (participant->getFirstName() == firstName && participant->getLastName() == lastName)
-                list.append(participant);
-        }
+        vector.append(participant);
     }
-    return list;
+    return vector;
+}
+
+const QString &ParticipantsRegister::setFirstName(id id, const QString &firstName)
+{
+    return const_cast<Participant *>(m_register.value(id))->setFirstName(firstName);
+}
+
+const QString &ParticipantsRegister::setLastName(id id, const QString &lastName)
+{
+    return const_cast<Participant *>(m_register.value(id))->setFirstName(lastName);
+}
+
+const Participant &ParticipantsRegister::rename(id id, const QString &firstName, const QString &lastName)
+{
+    return const_cast<Participant *>(m_register.value(id))->rename(firstName, lastName);
 }
