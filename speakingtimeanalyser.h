@@ -5,7 +5,6 @@
 
 #include "typedef.h"
 
-
 class SpeakingTimeAnalyser : public QObject
 {
     Q_OBJECT

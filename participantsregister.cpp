@@ -8,7 +8,7 @@ const Participant &ParticipantsRegister::create(const QString &firstName, const 
 
 Participants ParticipantsRegister::find(const QString &firstName, const QString &lastName) const
 {
-    Participants vector;
+    Participants result;
     for (auto & participant : m_register) {
         if (firstName.isEmpty() && !lastName.isEmpty()) {
             if (participant->getFirstName() != firstName)
@@ -20,9 +20,9 @@ Participants ParticipantsRegister::find(const QString &firstName, const QString 
             if (participant->getFirstName() != firstName || participant->getLastName() != lastName)
                 continue;
         }
-        vector.append(participant);
+        result.append(participant);
     }
-    return vector;
+    return result;
 }
 
 const QString &ParticipantsRegister::setFirstName(id id, const QString &firstName)
