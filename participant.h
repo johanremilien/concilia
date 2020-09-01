@@ -21,21 +21,20 @@ public:
     void toggleSpeakingState();
     duration getTotalSpeakingTime(id meetingID = UNDEFINED_ID) const;
     static void setCurrentMeetingID(id meetingID);
-    virtual inline bool operator==(const Participant &) override;
-
-    friend class Register<Participant>;
-    friend class ParticipantsRegister;
-    friend class SpeakingTimeRecorder;
-
-protected:
-    explicit Participant(id id = UNDEFINED_ID);
-    Participant(const QString &firstName, const QString &lastName, id id = UNDEFINED_ID);
-    ~Participant();
     const QString &setFirstName(const QString &firstName);
     const QString &setLastName(const QString &lastName);
     const Participant &rename(const QString &firstName, const QString &lastName);
     inline void takePartInCurrentMeeting();
     void setIsSpeaking(bool isSpeaking);
+    virtual inline bool operator==(const Participant &) override;
+
+    friend class Register<Participant>;
+    friend class ParticipantsRegister;
+
+protected:
+    explicit Participant(id id = UNDEFINED_ID);
+    Participant(const QString &firstName, const QString &lastName, id id = UNDEFINED_ID);
+    ~Participant();
 
 private:
     QString m_firstName;
