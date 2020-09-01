@@ -1,6 +1,6 @@
 #include "participant.h"
 
-id Participant::m_currentMeetingID = UNDEFINED_ID;
+id Participant::s_currentMeetingID = UNDEFINED_ID;
 
 Participant::Participant(id id) : Participant(QString(), QString(), id)
 {
@@ -8,7 +8,7 @@ Participant::Participant(id id) : Participant(QString(), QString(), id)
 }
 
 Participant::Participant(const QString &firstName, const QString &lastName, id id) :
-    m_id(id),
+    RegistrableItem<Participant>(id),
     m_firstName(firstName),
     m_lastName(lastName),
     m_isSpeaking(false)
@@ -19,11 +19,6 @@ Participant::Participant(const QString &firstName, const QString &lastName, id i
 Participant::~Participant()
 {
 
-}
-
-id Participant::getId() const
-{
-    return m_id;
 }
 
 const QString &Participant::getFirstName() const
@@ -38,9 +33,9 @@ const QString &Participant::getLastName() const
 
 void Participant::takePartInCurrentMeeting()
 {
-    if (m_currentMeetingID != UNDEFINED_ID) {
-        if (!m_records.contains(m_currentMeetingID))
-            m_records.insert(m_currentMeetingID, new QVector<const Record *>());
+    if (s_currentMeetingID != UNDEFINED_ID) {
+        if (!m_records.contains(s_currentMeetingID))
+            m_records.insert(s_currentMeetingID, new QVector<const Record *>());
     }
 }
 
@@ -52,17 +47,25 @@ void Participant::toggleSpeakingState()
 duration Participant::getTotalSpeakingTime(id meetingID) const
 {
     duration totalSpeakingTime = 0;
-    if (m_records.contains(meetingID)) {
+    if (meetingID == UNDEFINED_ID) {
+        for (const auto & meetingID : m_records.keys())
+            totalSpeakingTime += getTotalSpeakingTime(meetingID);
+    } else if (m_records.contains(meetingID)) {
         for (const auto &record : *m_records.value(meetingID))
             totalSpeakingTime += record->duration;
     }
     return totalSpeakingTime;
 }
 
-id Participant::setId(id id)
+void Participant::setCurrentMeetingID(id meetingID)
 {
-    return  (m_id = id);
+    s_currentMeetingID = meetingID;
 }
+
+bool Participant::operator==(const Participant & item)
+{
+    return (m_firstName == item.m_firstName && m_lastName == item.m_lastName);
+};
 
 const QString &Participant::setFirstName(const QString &firstName)
 {
@@ -83,7 +86,7 @@ const Participant &Participant::rename(const QString &firstName, const QString &
 
 void Participant::setIsSpeaking(bool isSpeaking)
 {
-    if (m_currentMeetingID != UNDEFINED_ID) {
+    if (s_currentMeetingID != UNDEFINED_ID) {
         static QDateTime dateTime;
         if ((m_isSpeaking = isSpeaking)) {
             dateTime = QDateTime::currentDateTime();
@@ -92,7 +95,7 @@ void Participant::setIsSpeaking(bool isSpeaking)
             Record record;
             record.dateTime = dateTime;
             record.duration = dateTime.secsTo(QDateTime::currentDateTime());
-            m_records[m_currentMeetingID]->push_back(&record);
+            m_records[s_currentMeetingID]->push_back(&record);
         }
     }
 }

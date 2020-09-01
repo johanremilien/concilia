@@ -4,13 +4,16 @@
 #include <QHash>
 #include <QDate>
 
-#include "typedef.h"
+#include "registrableitem.h"
+
+template <typename>
+class Register;
 
 class SpeakingTimeRecorder;
 class MeetingsRegister;
 class Participant;
 
-class Meeting
+class Meeting : public RegistrableItem<Meeting>
 {
 public:
     id getId() const;
@@ -21,7 +24,9 @@ public:
     const QDate &getEndDate() const;
     const QString &getName() const;
     duration getDuration() const;
+    virtual inline bool operator==(const Meeting &);
 
+    friend class Register<Meeting>;
     friend class MeetingsRegister;
     friend class SpeakingTimeRecorder;
 

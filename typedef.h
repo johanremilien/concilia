@@ -25,7 +25,7 @@ typedef struct {
 
 
 template <typename T>
-using RegisterVector = QVector<const T*>;
+using RegisterVector = QVector<const T *>;
 
 typedef RegisterVector<Record> Records;
 typedef RegisterVector<Pause> Pauses;

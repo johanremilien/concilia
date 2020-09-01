@@ -1,12 +1,6 @@
 #include "meetingsregister.h"
 #include "meeting.h"
 
-const Meeting &MeetingsRegister::create()
-{
-    Meeting *meeting = new Meeting(m_counter++);
-    return **(m_register.insert(meeting->getId(), meeting));
-}
-
 const Meeting &MeetingsRegister::create(const QString &name)
 {
     const Meeting *result;

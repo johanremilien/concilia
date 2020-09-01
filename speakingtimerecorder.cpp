@@ -55,14 +55,14 @@ const Meeting &createNewMeeting(const QString &name)
 
 bool SpeakingTimeRecorder::startMeeting()
 {
-    //    bool result = false;
-    //    if (!m_isStarted) {
-    //        Participant::setCurrentMeetingID(m_meeting.getId());
-    //        m_meeting.setStartDate(QDate::currentDate());
-    //        m_isStarted = true;
-    //        result = true;
-    //    }
-    //    return result;
+    bool result = false;
+    if (!m_isStarted) {
+        Participant::setCurrentMeetingID(m_meeting.getId());
+        m_meeting.setStartDate(QDate::currentDate());
+        m_isStarted = true;
+        result = true;
+    }
+    return result;
 }
 
 bool SpeakingTimeRecorder::pauseMeeting()
@@ -92,8 +92,8 @@ bool SpeakingTimeRecorder::endMeeting()
 {
     bool result = false;
     if (m_isStarted && !m_isStopped) {
-        m_meeting.setEndDate(QDate::currentDate());
-        result = (m_isStopped = true);
+        m_isStopped = true;
+        result = true;
     }
     return result;
 }
