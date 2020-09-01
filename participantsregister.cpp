@@ -1,12 +1,6 @@
 #include "participantsregister.h"
 #include "participant.h"
 
-const Participant &ParticipantsRegister::create()
-{
-    Participant *participant = new Participant(m_counter++);
-    return **(m_register.insert(participant->getId(), participant));
-}
-
 const Participant &ParticipantsRegister::create(const QString &firstName, const QString &lastName)
 {
     return rename(create().getId(), firstName, lastName);

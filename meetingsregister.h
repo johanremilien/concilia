@@ -11,11 +11,8 @@ public:
     const Meeting &create(const QString &name);
     Meetings find(const QString &name) const;
 
-    friend class Register<Meeting>;
-
 protected:
-    const Meeting &create();
+    using Register<Meeting>::create;
 };
-
 
 #endif // MEETINGSREGISTER_H

@@ -19,7 +19,6 @@ SOURCES += \
         meetingsregister.cpp \
         participant.cpp \
         participantsregister.cpp \
-        register.cpp \
         speakingtimeanalyser.cpp \
         speakingtimerecorder.cpp
 
@@ -45,6 +44,7 @@ HEADERS += \
     participant.h \
     participantsregister.h \
     register.h \
+    registrableitem.h \
     speakingtimeanalyser.h \
     speakingtimerecorder.h \
     typedef.h

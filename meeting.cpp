@@ -42,7 +42,7 @@ bool Meeting::removeParticipant(id id)
 Participant &Meeting::getParticipant(id id)
 {
     //should not be used; link to Participant register instead;
-   return *m_participants.value(id);
+    return *m_participants.value(id);
 }
 
 const QDate &Meeting::getStartDate() const
@@ -63,6 +63,11 @@ const QString &Meeting::getName() const
 duration Meeting::getDuration() const
 {
     return m_duration;
+}
+
+bool Meeting::operator==(const Meeting & meeting)
+{
+    return (m_name == meeting.m_name);
 }
 
 id Meeting::setId(id id)
