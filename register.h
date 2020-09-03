@@ -3,6 +3,7 @@
 
 #include <QHash>
 #include <type_traits>
+#include <typeinfo>
 
 #include "typedef.h"
 
@@ -15,17 +16,21 @@ class Register
 public:
     Register();
     ~Register();
-    inline T *get(id id) const;
-    id find(T &t) const;
     inline RegisterVector<T> getRegisterVector() const;
 
 protected:
     const T &create();
     inline void clear();
     inline void remove(id id);
+    inline T *get(id id) const;
+    inline void itemNotFound(id id);
 
+protected:
     RegisterHash<T> m_register;
+
+private:
     id m_counter;
+    QString m_typeinfo;
 };
 
 template<typename T>
@@ -34,6 +39,7 @@ Register<T>::Register() :
     m_counter(0)
 {
     static_assert (std::is_base_of<RegistrableItem<T>, T>::value, "Register<T> :T must derive from RegistrableItem");
+    m_typeinfo = typeid(T).name();
 }
 
 template<typename T>
@@ -49,15 +55,9 @@ T *Register<T>::get(id id) const
 }
 
 template<typename T>
-id Register<T>::find(T &t) const
+void Register<T>::itemNotFound(id id)
 {
-    id result = UNDEFINED_ID;
-    for (auto &item : m_register.values()) {
-        if (*item == t) {
-            result = item->getId();
-            break;
-        }
-    }
+    qWarning("%s index: %d not found.", qUtf8Printable(m_typeinfo), id);
 }
 
 template<typename T>

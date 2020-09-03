@@ -2,15 +2,10 @@
 
 id Participant::s_currentMeetingID = UNDEFINED_ID;
 
-Participant::Participant(id id) : Participant(QString(), QString(), id)
-{
-
-}
-
-Participant::Participant(const QString &firstName, const QString &lastName, id id) :
+Participant::Participant(id id) :
     RegistrableItem<Participant>(id),
-    m_firstName(firstName),
-    m_lastName(lastName),
+    m_firstName(QString()),
+    m_lastName(QString()),
     m_isSpeaking(false)
 {
 
@@ -37,11 +32,6 @@ void Participant::takePartInCurrentMeeting()
         if (!m_records.contains(s_currentMeetingID))
             m_records.insert(s_currentMeetingID, new QVector<const Record *>());
     }
-}
-
-void Participant::toggleSpeakingState()
-{
-    m_isSpeaking ? setIsSpeaking(false) : setIsSpeaking(true);
 }
 
 duration Participant::getTotalSpeakingTime(id meetingID) const
@@ -77,14 +67,12 @@ const QString &Participant::setLastName(const QString &lastName)
     return (m_lastName = lastName);
 }
 
-const Participant &Participant::rename(const QString &firstName, const QString &lastName)
+bool Participant::getIsSpeaking() const
 {
-    (void) setFirstName(firstName);
-    (void) setLastName(lastName);
-    return *this;
+    return m_isSpeaking;
 }
 
-void Participant::setIsSpeaking(bool isSpeaking)
+bool Participant::setIsSpeaking(bool isSpeaking)
 {
     if (s_currentMeetingID != UNDEFINED_ID) {
         static QDateTime dateTime;
@@ -98,4 +86,5 @@ void Participant::setIsSpeaking(bool isSpeaking)
             m_records[s_currentMeetingID]->push_back(&record);
         }
     }
+    return m_isSpeaking;
 }
