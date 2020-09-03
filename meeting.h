@@ -6,43 +6,29 @@
 
 #include "registrableitem.h"
 
-template <typename>
-class Register;
-
-class SpeakingTimeRecorder;
-class MeetingsRegister;
-class Participant;
-
 class Meeting : public RegistrableItem<Meeting>
 {
 public:
-    id getId() const;
-    const Participant &addParticipant(Participant &participant);
-    bool removeParticipant(id id);
-    Participant &getParticipant(id id);
     const QDate &getStartDate() const;
     const QDate &getEndDate() const;
     const QString &getName() const;
-    duration getDuration() const;
-    virtual inline bool operator==(const Meeting &);
-
-    friend class Register<Meeting>;
-    friend class MeetingsRegister;
-    friend class SpeakingTimeRecorder;
-
-protected:
-    explicit Meeting(id id = UNDEFINED_ID);
-    Meeting(const QString &name, id id = UNDEFINED_ID);
-    ~Meeting();
-    id setId(id id);
     const QString &setName(const QString &name);
     void setStartDate(const QDate &date);
     void setEndDate(const QDate &date);
+    void addParticipant(id id);
+    bool removeParticipant(id id);
+    duration getDuration() const;
+    virtual inline bool operator==(const Meeting &) override;
+
+    friend class Register<Meeting>;
+
+protected:
+    explicit Meeting(id id);
+    ~Meeting();
 
 private:
-    id m_id;
     QString m_name;
-    ParticipantHash m_participants; //QVector<id> should be enough
+    IDs m_participants;
     QDate m_startDate;
     QDate m_endDate;
     duration m_duration;

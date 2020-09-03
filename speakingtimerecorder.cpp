@@ -105,8 +105,8 @@ void SpeakingTimeRecorder::silence()
 
 void SpeakingTimeRecorder::toggleSpeakingState(id id)
 {
-    if (id != UNDEFINED_ID)
-        m_meeting.getParticipant(id).toggleSpeakingState();
+//    if (id != UNDEFINED_ID)
+//        m_meeting.getParticipant(id).toggleSpeakingState();
 }
 
 void SpeakingTimeRecorder::participantSpeaking(id id)

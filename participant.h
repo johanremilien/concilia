@@ -7,33 +7,29 @@
 
 #include "registrableitem.h"
 
-template <typename>
-class Register;
-
-class ParticipantsRegister;
-class SpeakingTimeRecorder;
-
 class Participant : public RegistrableItem<Participant>
 {
 public:
     const QString &getFirstName() const;
-    const QString &getLastName() const;
-    void toggleSpeakingState();
-    duration getTotalSpeakingTime(id meetingID = UNDEFINED_ID) const;
-    static void setCurrentMeetingID(id meetingID);
     const QString &setFirstName(const QString &firstName);
+
+    const QString &getLastName() const;
     const QString &setLastName(const QString &lastName);
-    const Participant &rename(const QString &firstName, const QString &lastName);
+
+    bool getIsSpeaking() const;
+    bool setIsSpeaking(bool isSpeaking);
+
+    duration getTotalSpeakingTime(id meetingID = UNDEFINED_ID) const;
+
     inline void takePartInCurrentMeeting();
-    void setIsSpeaking(bool isSpeaking);
+
     virtual inline bool operator==(const Participant &) override;
+    static void setCurrentMeetingID(id meetingID);
 
     friend class Register<Participant>;
-    friend class ParticipantsRegister;
 
 protected:
-    explicit Participant(id id = UNDEFINED_ID);
-    Participant(const QString &firstName, const QString &lastName, id id = UNDEFINED_ID);
+    explicit Participant(id id);
     ~Participant();
 
 private:
