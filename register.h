@@ -23,23 +23,23 @@ protected:
     inline void clear();
     inline void remove(id id);
     inline T *get(id id) const;
-    inline void itemNotFound(id id);
+    inline T *itemNotFound(id id) const;
 
-protected:
-    RegisterHash<T> m_register;
+    void process(std::function<bool(T &)> f) const;
 
 private:
+    RegisterHash<T> m_register;
     id m_counter;
-    QString m_typeinfo;
+    const char *m_typeinfo;
 };
 
 template<typename T>
 Register<T>::Register() :
     m_register(),
-    m_counter(0)
+    m_counter(0),
+    m_typeinfo(typeid(T).name())
 {
-    static_assert (std::is_base_of<RegistrableItem<T>, T>::value, "Register<T> :T must derive from RegistrableItem");
-    m_typeinfo = typeid(T).name();
+    static_assert(std::is_base_of<RegistrableItem<T>, T>::value, "must derive from RegistrableItem");
 }
 
 template<typename T>
@@ -51,13 +51,23 @@ Register<T>::~Register()
 template<typename T>
 T *Register<T>::get(id id) const
 {
-    return m_register.value(id, nullptr);
+    return m_register.value(id, itemNotFound(id));
 }
 
 template<typename T>
-void Register<T>::itemNotFound(id id)
+T *Register<T>::itemNotFound(id id) const
 {
-    qWarning("%s index: %d not found.", qUtf8Printable(m_typeinfo), id);
+    qWarning("%s index: %d not found.", m_typeinfo, id);
+    return nullptr;
+}
+
+template<typename T>
+void Register<T>::process(std::function<bool(T &)> func) const
+{
+    for (const auto &item : m_register.values()) {
+        if (func(*item))
+            break;
+    }
 }
 
 template<typename T>

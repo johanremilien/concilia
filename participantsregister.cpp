@@ -9,8 +9,8 @@ const Participant &ParticipantsRegister::create(const QString &firstName, const 
 const QString &ParticipantsRegister::getFirstName(id id) const
 {
     const QString *result = &undefined_name;
-    if (m_register.contains(id))
-        result = &m_register.value(id)->getFirstName();
+    if (get(id))
+        result = &(get(id)->getFirstName());
     else
         qWarning("Participant not found");
     return *result;
@@ -19,8 +19,8 @@ const QString &ParticipantsRegister::getFirstName(id id) const
 const QString &ParticipantsRegister::getLastName(id id) const
 {
     const QString *result = &undefined_name;
-    if (m_register.contains(id))
-        result = &m_register.value(id)->getLastName();
+    if (get(id))
+        result = &(get(id)->getLastName());
     else
         qWarning("Participant not found");
     return *result;
@@ -29,44 +29,56 @@ const QString &ParticipantsRegister::getLastName(id id) const
 id ParticipantsRegister::find(const QString &firstName, const QString &lastName) const
 {
     id result = UNDEFINED_ID;
-    for (auto & participant : m_register) {
-        if (participant->getFirstName() == firstName && participant->getLastName() == lastName) {
-            result = participant->getId();
-            break;
+    process([&firstName, &lastName, &result](const Participant & participant)
+    {
+        bool exitLoop = false;
+        if (participant.getFirstName() == firstName && participant.getLastName() == lastName) {
+            result = participant.getId();
+            exitLoop = true;
         }
-    }
-    return result;
+        return exitLoop;
+    });
+    return  result;
 }
 
 IDs ParticipantsRegister::findByFirstName(const QString &firstName) const
 {
     IDs result;
-    for (const auto &participant : m_register.values()) {
-        if (participant->getFirstName() == firstName)
-            result.append(participant->getId());
-    }
+    process([&firstName, &result](const Participant &participant)
+    {
+        bool exitLoop = false;
+        if (participant.getFirstName() == firstName)
+            result.append(participant.getId());
+        return exitLoop;
+    });
     return result;
 }
 
 IDs ParticipantsRegister::findByLastName(const QString &lastName) const
 {
     IDs result;
-    for (const auto &participant : m_register.values()) {
-        if (participant->getLastName() == lastName)
-            result.append(participant->getId());
-    }
+    process([&lastName, &result](const Participant &participant)
+    {
+        bool exitLoop = false;
+        if (participant.getLastName() == lastName)
+            result.append(participant.getId());
+        return exitLoop;
+    });
     return result;
 }
 
 IDs ParticipantsRegister::findIncompleteNames(const QString &firstName, const QString &lastName) const
 {
     IDs result;
-    for (const auto &participant : m_register.values()) {
-        if (participant->getLastName().contains(firstName) &&
-                participant->getLastName().contains(lastName)) {
-            result.append(participant->getId());
+    process([&firstName, &lastName, &result](const Participant &participant)
+    {
+        bool exitLoop = false;
+        if (participant.getLastName().contains(firstName) &&
+                participant.getLastName().contains(lastName)) {
+            result.append(participant.getId());
         }
-    }
+        return exitLoop;
+    });
     return result;
 }
 

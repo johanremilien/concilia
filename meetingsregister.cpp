@@ -23,16 +23,16 @@ const Meeting &MeetingsRegister::create(const QString &name)
 const QString &MeetingsRegister::getName(id id)
 {
     const QString *result = &undefined_name;
-    if (m_register.contains(id))
-        result = &m_register.value(id)->getName();
+    if (get(id))
+        result = &(get(id)->getName());
     return *result;
 }
 
 const QString &MeetingsRegister::setName(id id, const QString &name)
 {
     const QString *result = &undefined_name;
-    if (m_register.contains(id))
-        result = &(m_register.value(id)->setName(name));
+    if (get(id))
+        result = &(get(id)->setName(name));
     return *result;
 }
 
@@ -49,21 +49,27 @@ const Meeting &MeetingsRegister::rename(id id, const QString &name)
 id MeetingsRegister::find(const QString &name) const
 {
     id result = UNDEFINED_ID;
-    for (const auto &meeting : m_register.values()) {
-        if (meeting->getName() == name) {
-            result = meeting->getId();
-            break;
+    process([&name, &result](const Meeting &meeting)
+    {
+        bool exitLoop = false;
+        if (meeting.getName() == name) {
+            result = meeting.getId();
+            exitLoop = true;
         }
-    }
+        return exitLoop;
+    });
     return result;
 }
 
 IDs MeetingsRegister::findIncompleteName(const QString &name) const
 {
     IDs result;
-    for (const auto & meeting : m_register.values()) {
-        if (meeting->getName().contains(name))
-            result.append(meeting->getId());
-    }
+    process([&name, &result](const Meeting &meeting)
+    {
+        bool exitLoop = false;
+        if (meeting.getName().contains(name))
+            result.append(meeting.getId());
+        return exitLoop;
+    });
     return result;
 }
