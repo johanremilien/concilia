@@ -3,9 +3,6 @@
 
 #include "typedef.h"
 
-template <typename>
-class Register;
-
 template <typename T>
 class RegistrableItem
 {

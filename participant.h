@@ -5,6 +5,7 @@
 #include <QVector>
 #include <type_traits>
 
+#include <register.h>
 #include "registrableitem.h"
 
 class Participant : public RegistrableItem<Participant>

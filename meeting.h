@@ -4,6 +4,7 @@
 #include <QHash>
 #include <QDate>
 
+#include "register.h"
 #include "registrableitem.h"
 
 class Meeting : public RegistrableItem<Meeting>
