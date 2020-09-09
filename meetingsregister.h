@@ -16,7 +16,7 @@ public:
     inline void addParticipant(id meetingId, id particpantId);
     inline void addParticipant(id meetingId, const Participant &participant);
     inline bool removeParticipant(id meetingId, id participantId);
-    inline void removeParticipant(id meetingId, const Participant &participant);
+    inline bool removeParticipant(id meetingId, const Participant &participant);
     duration getDuration(id id) const;
 
     id find(const QString &name) const;
