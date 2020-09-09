@@ -8,7 +8,9 @@
 
 SpeakingTimeRecorder::SpeakingTimeRecorder(Meeting &meeting, QObject *parent) :
     QObject(parent),
-    m_meeting(meeting),
+    m_participantsRegister(),
+    m_meetingsRegister(),
+    m_currentMeetingId(UNDEFINED_ID),
     m_isStarted(false),
     m_isSuspended(false),
     m_isStopped(false),
@@ -20,7 +22,7 @@ SpeakingTimeRecorder::SpeakingTimeRecorder(Meeting &meeting, QObject *parent) :
 
 SpeakingTimeRecorder::~SpeakingTimeRecorder()
 {
-
+    //m_meetingsRegister.stop(m_currentMeetingId);
 }
 
 const Participant &SpeakingTimeRecorder::addParticipant(const QString& firstName, const QString &lastName)
@@ -30,12 +32,12 @@ const Participant &SpeakingTimeRecorder::addParticipant(const QString& firstName
 
 bool SpeakingTimeRecorder::removeParticipant(id id)
 {
-    bool result = false;
-    if (!m_isStarted) {
-        m_meeting.removeParticipant(id);
-        result = true;
-    }
-    return result;
+//    bool result = false;
+//    if (!m_isStarted) {
+//        m_meeting.removeParticipant(id);
+//        result = true;
+//    }
+//    return result;
 }
 
 bool SpeakingTimeRecorder::continueMeeting(id meetingID)
@@ -55,25 +57,25 @@ const Meeting &createNewMeeting(const QString &name)
 
 bool SpeakingTimeRecorder::startMeeting()
 {
-    bool result = false;
-    if (!m_isStarted) {
-        Participant::setCurrentMeetingID(m_meeting.getId());
-        m_meeting.setStartDate(QDate::currentDate());
-        m_isStarted = true;
-        result = true;
-    }
-    return result;
+//    bool result = false;
+//    if (!m_isStarted) {
+//        Participant::setCurrentMeetingID(m_meeting.getId());
+//        m_meeting.setStartDate(QDate::currentDate());
+//        m_isStarted = true;
+//        result = true;
+//    }
+//    return result;
 }
 
 bool SpeakingTimeRecorder::pauseMeeting()
 {
-    bool result = false;
-    if (m_isStarted && !m_isStopped && !m_isSuspended) {
-        m_pauses.append(new Pause{QDateTime::currentDateTime(), QDateTime()});
-        m_isSuspended = true;
-        result = true;
-    }
-    return result;
+//    bool result = false;
+//    if (m_isStarted && !m_isStopped && !m_isSuspended) {
+//        m_pauses.append(new Pause{QDateTime::currentDateTime(), QDateTime()});
+//        m_isSuspended = true;
+//        result = true;
+//    }
+//    return result;
 }
 
 bool SpeakingTimeRecorder::restartMeeting()

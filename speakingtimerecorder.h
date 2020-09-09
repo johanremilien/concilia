@@ -3,10 +3,8 @@
 
 #include <QObject>
 
-#include "typedef.h"
-
-class Meeting;
-class Participant;
+#include "participantsregister.h"
+#include "meetingsregister.h"
 
 class SpeakingTimeRecorder: public QObject
 {
@@ -43,7 +41,9 @@ protected:
     void toggleSpeakingState(id id);
 
 private:
-    Meeting &m_meeting;
+    ParticipantsRegister m_participantsRegister;
+    MeetingsRegister m_meetingsRegister;
+    id m_currentMeetingId;
     bool m_isStarted;
     bool m_isSuspended;
     bool m_isStopped;

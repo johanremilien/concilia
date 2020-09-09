@@ -17,14 +17,15 @@ public:
     Register();
     ~Register();
     inline RegisterVector<T> getRegisterVector() const;
+    inline T &operator[](id id);
 
 protected:
     const T &create();
     inline void clear();
     inline void remove(id id);
     inline T *get(id id) const;
-    inline T *itemNotFound(id id) const;
-
+    inline T *itemNotFoundWarning(id id) const;
+    inline void itemNotFoundFatal(id id) const;
     void process(std::function<bool(T &)> f) const;
 
 private:
@@ -51,14 +52,20 @@ Register<T>::~Register()
 template<typename T>
 T *Register<T>::get(id id) const
 {
-    return m_register.value(id, itemNotFound(id));
+    return m_register.value(id, itemNotFoundWarning(id));
 }
 
 template<typename T>
-T *Register<T>::itemNotFound(id id) const
+T *Register<T>::itemNotFoundWarning(id id) const
 {
     qWarning("%s index: %d not found.", m_typeinfo, id);
     return nullptr;
+}
+
+template<typename T>
+void Register<T>::itemNotFoundFatal(id id) const
+{
+    qFatal("%s index: %d not found.", m_typeinfo, id);
 }
 
 template<typename T>
@@ -77,6 +84,15 @@ RegisterVector<T> Register<T>::getRegisterVector() const
     for (auto & item : m_register.values())
         result.append(item);
     return result;
+}
+
+template<typename T>
+T &Register<T>::operator[](id id)
+{
+    if (m_register.contains(id))
+        return m_register[id];
+    else
+        itemNotFoundFatal(id);
 }
 
 template<typename T>
