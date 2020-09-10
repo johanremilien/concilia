@@ -14,8 +14,7 @@ class SpeakingTimeRecorder: public QObject
     Q_PROPERTY(bool isSuspended MEMBER m_isSuspended NOTIFY isPauseChanged)
     Q_PROPERTY(bool isStopped MEMBER m_isStopped NOTIFY isStoppedChanged)
 public:
-    //SpeakingTimeRecorder(QObject *parent = nullptr);
-    SpeakingTimeRecorder(Meeting &meeting, QObject *parent =  nullptr);
+    SpeakingTimeRecorder(QObject *parent =  nullptr);
     ~SpeakingTimeRecorder();
 
     bool continueMeeting(id meetingID);

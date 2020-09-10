@@ -6,7 +6,7 @@
 
 //TODO: Create null object Meeting
 
-SpeakingTimeRecorder::SpeakingTimeRecorder(Meeting &meeting, QObject *parent) :
+SpeakingTimeRecorder::SpeakingTimeRecorder(QObject *parent) :
     QObject(parent),
     m_participantsRegister(),
     m_meetingsRegister(),
