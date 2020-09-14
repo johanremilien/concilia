@@ -4,7 +4,8 @@
 #include <QHash>
 #include <type_traits>
 #include <typeinfo>
-#include <exception>
+#include <stdexcept>
+#include <sstream>
 
 #include "typedef.h"
 
@@ -83,10 +84,13 @@ RegisterVector<T> Register<T>::getRegisterVector() const
 template<typename T>
 T &Register<T>::operator[](id id)
 {
-    if (m_register.contains(id))
-        return m_register[id];
-    else
-        throw std::runtime_error("%s  index: %d", m_typeinfo, id);
+    if (m_register.contains(id)) {
+        return *m_register[id];
+    } else {
+        std::ostringstream oss;
+        oss << m_typeinfo << " no corresponding index: " << id;
+        throw std::runtime_error(oss.str());
+    }
 }
 
 template<typename T>
