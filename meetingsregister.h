@@ -7,19 +7,21 @@ class MeetingsRegister : public Register<Meeting>
 {
 public:
     const Meeting &create(const QString &name);
-    const QString &getName(id id);
-    inline const QString &setName(id id, const QString &name);
-    inline const Meeting &rename(id id, const QString &name);
+    const QString &getName(ID id);
+    inline const QString &setName(ID id, const QString &name);
+    const Meeting &rename(ID id, const QString &name);
 
-    inline void start(id id);
-    inline void stop(id id);
-    inline void addParticipant(id meetingId, id particpantId);
-    inline void addParticipant(id meetingId, const Participant &participant);
-    inline bool removeParticipant(id meetingId, id participantId);
-    inline bool removeParticipant(id meetingId, const Participant &participant);
-    duration getDuration(id id) const;
+    bool start(ID id);
+    bool pause(ID id);
+    bool restart(ID id);
+    bool end(ID id);
+    void addParticipant(ID meetingId, ID particpantId);
+    inline void addParticipant(ID meetingId, const Participant &participant);
+    bool removeParticipant(ID meetingId, ID participantId);
+    inline bool removeParticipant(ID meetingId, const Participant &participant);
+    Duration getDuration(ID id) const;
 
-    id find(const QString &name) const;
+    ID find(const QString &name) const;
     IDs findIncompleteName(const QString &name) const;
 
 protected:

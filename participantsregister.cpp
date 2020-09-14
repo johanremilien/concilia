@@ -6,29 +6,25 @@ const Participant &ParticipantsRegister::create(const QString &firstName, const 
     return rename(create().getId(), firstName, lastName);
 }
 
-const QString &ParticipantsRegister::getFirstName(id id) const
+const QString &ParticipantsRegister::getFirstName(ID id) const
 {
-    const QString *result = &undefined_name;
-    if (get(id))
-        result = &(get(id)->getFirstName());
-    else
-        qWarning("Participant not found");
-    return *result;
+    Participant *participant = get(id);
+    if (participant == nullptr)
+        exception(id);
+    return participant->getFirstName();
 }
 
-const QString &ParticipantsRegister::getLastName(id id) const
+const QString &ParticipantsRegister::getLastName(ID id) const
 {
-    const QString *result = &undefined_name;
-    if (get(id))
-        result = &(get(id)->getLastName());
-    else
-        qWarning("Participant not found");
-    return *result;
+    Participant *participant = get(id);
+    if (participant == nullptr)
+        exception(id);
+    return participant->getLastName();
 }
 
-id ParticipantsRegister::find(const QString &firstName, const QString &lastName) const
+ID ParticipantsRegister::find(const QString &firstName, const QString &lastName) const
 {
-    id result = UNDEFINED_ID;
+    ID result = UNDEFINED_ID;
     process([&firstName, &lastName, &result](const Participant & participant)
     {
         bool exitLoop = false;
@@ -82,61 +78,45 @@ IDs ParticipantsRegister::findIncompleteNames(const QString &firstName, const QS
     return result;
 }
 
-const QString &ParticipantsRegister::setFirstName(id id, const QString &firstName)
+const QString &ParticipantsRegister::setFirstName(ID id, const QString &firstName)
 {
-    const QString *result = &undefined_name;
     Participant *participant = get(id);
-    if (participant)
-        result = &(participant->setFirstName(firstName));
-    else
-        qWarning("Participant not found");
-    return *result;
+    if (participant == nullptr)
+        exception(id);
+    return participant->setFirstName(firstName);;
 }
 
-const QString &ParticipantsRegister::setLastName(id id, const QString &lastName)
+const QString &ParticipantsRegister::setLastName(ID id, const QString &lastName)
 {
-    const QString *result = &undefined_name;
     Participant *participant = get(id);
-    if (participant)
-        result = &(participant->setLastName(lastName));
-    else
-        qWarning("Participant not found");
-    return *result;
+    if (participant == nullptr)
+        exception(id);
+    return participant->setLastName(lastName);
 }
 
-const Participant &ParticipantsRegister::rename(id id, const QString &firstName, const QString &lastName)
+const Participant &ParticipantsRegister::rename(ID id, const QString &firstName, const QString &lastName)
 {
     Participant *participant = get(id);
-    if (participant) {
-        (void) participant->setFirstName(firstName);
-        (void) participant->setLastName(lastName);
-    } else {
-        qWarning("Participant not found");
-    }
+    if (participant == nullptr)
+        exception(id);
+    (void) participant->setFirstName(firstName);
+    (void) participant->setLastName(lastName);
     return *participant;
 }
 
-bool ParticipantsRegister::toggleSpeakingState(id id)
+bool ParticipantsRegister::toggleSpeakingState(ID id)
 {
-    bool result = false;
     Participant *participant = get(id);
-    if (participant) {
-        result = (participant->getIsSpeaking() ? participant->setIsSpeaking(false)
-                                               : participant->setIsSpeaking(true));
-    } else {
-        qWarning("Participant not found");
-    }
-    return result;
+    if (participant == nullptr)
+        exception(id);
+    return (participant->getIsSpeaking() ? participant->setIsSpeaking(false)
+                                         : participant->setIsSpeaking(true));
 }
 
-duration ParticipantsRegister::getTotalSpeakingTime(id participantID, id meetingID) const
+Duration ParticipantsRegister::getTotalSpeakingTime(ID participantID, ID meetingID) const
 {
-    duration result = 0;
     Participant *participant = get(participantID);
-    if (participant) {
-        result = participant->getTotalSpeakingTime(meetingID);
-    } else {
-        qWarning("Participant not found");
-    }
-    return result;
+    if (participant == nullptr)
+        exception(participantID);
+    return participant->getTotalSpeakingTime(meetingID);
 }

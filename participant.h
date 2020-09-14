@@ -20,17 +20,17 @@ public:
     bool getIsSpeaking() const;
     bool setIsSpeaking(bool isSpeaking);
 
-    duration getTotalSpeakingTime(id meetingID = UNDEFINED_ID) const;
+    Duration getTotalSpeakingTime(ID meetingID = UNDEFINED_ID) const;
 
     inline void takePartInCurrentMeeting();
 
     virtual inline bool operator==(const Participant &) override;
-    static void setCurrentMeetingID(id meetingID);
+    static void setCurrentMeetingID(ID meetingID);
 
     friend class Register<Participant>;
 
 protected:
-    explicit Participant(id id);
+    explicit Participant(ID id);
     ~Participant();
 
 private:
@@ -38,7 +38,7 @@ private:
     QString m_lastName;
     bool m_isSpeaking;
     RecordVectorHash m_records;
-    static id s_currentMeetingID;
+    static ID s_currentMeetingID;
 };
 
 #endif // PARTICIPANT_H

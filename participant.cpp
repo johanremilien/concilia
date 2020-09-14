@@ -1,8 +1,8 @@
 #include "participant.h"
 
-id Participant::s_currentMeetingID = UNDEFINED_ID;
+ID Participant::s_currentMeetingID = UNDEFINED_ID;
 
-Participant::Participant(id id) :
+Participant::Participant(ID id) :
     RegistrableItem<Participant>(id),
     m_firstName(QString()),
     m_lastName(QString()),
@@ -34,20 +34,20 @@ void Participant::takePartInCurrentMeeting()
     }
 }
 
-duration Participant::getTotalSpeakingTime(id meetingID) const
+Duration Participant::getTotalSpeakingTime(ID meetingID) const
 {
-    duration totalSpeakingTime = 0;
+    Duration totalSpeakingTime = 0;
     if (meetingID == UNDEFINED_ID) {
         for (const auto & meetingID : m_records.keys())
             totalSpeakingTime += getTotalSpeakingTime(meetingID);
     } else if (m_records.contains(meetingID)) {
         for (const auto &record : *m_records.value(meetingID))
-            totalSpeakingTime += record->duration;
+            totalSpeakingTime += record->startTime.secsTo(record->endTime);
     }
     return totalSpeakingTime;
 }
 
-void Participant::setCurrentMeetingID(id meetingID)
+void Participant::setCurrentMeetingID(ID meetingID)
 {
     s_currentMeetingID = meetingID;
 }
@@ -75,15 +75,13 @@ bool Participant::getIsSpeaking() const
 bool Participant::setIsSpeaking(bool isSpeaking)
 {
     if (s_currentMeetingID != UNDEFINED_ID) {
-        static QDateTime dateTime;
+        static QDateTime startDateTime;
         if ((m_isSpeaking = isSpeaking)) {
-            dateTime = QDateTime::currentDateTime();
+            startDateTime = QDateTime::currentDateTime();
         } else {
             takePartInCurrentMeeting();
-            Record record;
-            record.dateTime = dateTime;
-            record.duration = dateTime.secsTo(QDateTime::currentDateTime());
-            m_records[s_currentMeetingID]->push_back(&record);
+            m_records[s_currentMeetingID]->push_back(new Record {startDateTime,
+                                                                 QDateTime::currentDateTime()});
         }
     }
     return m_isSpeaking;

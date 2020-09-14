@@ -2,34 +2,30 @@
 #define SPEAKINGTIMERECORDER_H
 
 #include <QObject>
+#include <memory>
 
-#include "participantsregister.h"
-#include "meetingsregister.h"
+#include "typedef.h"
 
 class SpeakingTimeRecorder: public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool isStarted MEMBER m_isStarted NOTIFY isStartedChanged)
-    Q_PROPERTY(bool isSuspended MEMBER m_isSuspended NOTIFY isPauseChanged)
-    Q_PROPERTY(bool isStopped MEMBER m_isStopped NOTIFY isStoppedChanged)
 public:
     SpeakingTimeRecorder(QObject *parent =  nullptr);
     ~SpeakingTimeRecorder();
 
-    bool continueMeeting(id meetingID);
-    void createNewMeeting(const QString name = QString());;
-    const Participant &addParticipant(const QString& firstName, const QString &lastName);
-    bool removeParticipant(id id);
+    //may be useless
+    ID getCurrentMeetingId() const;
 
-    id getCurrentMeetingId() const;
-
+    Q_INVOKABLE ID createNewMeeting(const QString &name = QString());
+    Q_INVOKABLE ID addParticipant(const QString &firstName, const QString &lastName);
+    Q_INVOKABLE bool removeParticipant(ID id);
     Q_INVOKABLE bool startMeeting();
     Q_INVOKABLE bool pauseMeeting();
     Q_INVOKABLE bool restartMeeting();
     Q_INVOKABLE bool endMeeting();
     Q_INVOKABLE void silence();
-    Q_INVOKABLE void participantSpeaking(id id);
+    Q_INVOKABLE void participantSpeaking(ID id);
 
 signals:
     void isStartedChanged(bool isStarted);
@@ -37,17 +33,13 @@ signals:
     void isStoppedChanged(bool isStopped);
 
 protected:
-    void toggleSpeakingState(id id);
+    void toggleSpeakingState(ID id);
 
 private:
-    ParticipantsRegister m_participantsRegister;
-    MeetingsRegister m_meetingsRegister;
-    id m_currentMeetingId;
-    bool m_isStarted;
-    bool m_isSuspended;
-    bool m_isStopped;
-    Pauses m_pauses;
-    id m_speakerID;
+    std::unique_ptr<ParticipantsRegister> m_participantsRegister;
+    std::unique_ptr<MeetingsRegister> m_meetingsRegister;
+    ID m_currentMeetingId;
+    ID m_currentSpeakerID;
 };
 
 #endif // SPEAKINGTIMERECORDER_H

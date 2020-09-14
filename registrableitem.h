@@ -7,20 +7,20 @@ template <typename T>
 class RegistrableItem
 {
 public:
-    inline id getId() const;
-    inline id setId(id id);
+    inline ID getId() const;
+    inline ID setId(ID id);
     virtual inline bool operator==(const T &) = 0;
 
 protected:
-    RegistrableItem(id id = UNDEFINED_ID);
+    RegistrableItem(ID id = UNDEFINED_ID);
     virtual ~RegistrableItem();
 
 private:
-    id m_id;
+    ID m_id;
 };
 
 template <typename T>
-RegistrableItem<T>::RegistrableItem(id id) :
+RegistrableItem<T>::RegistrableItem(ID id) :
     m_id(id)
 {}
 
@@ -29,13 +29,13 @@ RegistrableItem<T>::~RegistrableItem()
 {}
 
 template <typename T>
-id RegistrableItem<T>::getId() const
+ID RegistrableItem<T>::getId() const
 {
     return m_id;
 }
 
 template <typename T>
-id RegistrableItem<T>::setId(id id)
+ID RegistrableItem<T>::setId(ID id)
 {
     return (m_id = id);
 }
