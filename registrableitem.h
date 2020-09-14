@@ -13,7 +13,7 @@ public:
 
 protected:
     RegistrableItem(id id = UNDEFINED_ID);
-    ~RegistrableItem();
+    virtual ~RegistrableItem();
 
 private:
     id m_id;
