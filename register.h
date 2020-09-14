@@ -4,6 +4,7 @@
 #include <QHash>
 #include <type_traits>
 #include <typeinfo>
+#include <exception>
 
 #include "typedef.h"
 
@@ -24,8 +25,7 @@ protected:
     inline void clear();
     inline void remove(id id);
     inline T *get(id id) const;
-    inline T *itemNotFoundWarning(id id) const;
-    inline void itemNotFoundFatal(id id) const;
+    inline T *itemNotFound(id id) const;
     void process(std::function<bool(T &)> f) const;
 
 private:
@@ -52,20 +52,14 @@ Register<T>::~Register()
 template<typename T>
 T *Register<T>::get(id id) const
 {
-    return m_register.value(id, itemNotFoundWarning(id));
+    return m_register.value(id, itemNotFound(id));
 }
 
 template<typename T>
-T *Register<T>::itemNotFoundWarning(id id) const
+T *Register<T>::itemNotFound(id id) const
 {
     qWarning("%s index: %d not found.", m_typeinfo, id);
     return nullptr;
-}
-
-template<typename T>
-void Register<T>::itemNotFoundFatal(id id) const
-{
-    qFatal("%s index: %d not found.", m_typeinfo, id);
 }
 
 template<typename T>
@@ -92,7 +86,7 @@ T &Register<T>::operator[](id id)
     if (m_register.contains(id))
         return m_register[id];
     else
-        itemNotFoundFatal(id);
+        throw std::runtime_error("%s  index: %d", m_typeinfo, id);
 }
 
 template<typename T>
