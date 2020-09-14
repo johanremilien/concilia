@@ -4,100 +4,59 @@
 #include "participantsregister.h"
 #include "participant.h"
 
-//TODO: Create null object Meeting
-
 SpeakingTimeRecorder::SpeakingTimeRecorder(QObject *parent) :
     QObject(parent),
-    m_participantsRegister(),
-    m_meetingsRegister(),
+    m_participantsRegister(new ParticipantsRegister()),
+    m_meetingsRegister(new MeetingsRegister()),
     m_currentMeetingId(UNDEFINED_ID),
-    m_isStarted(false),
-    m_isSuspended(false),
-    m_isStopped(false),
-    m_pauses(),
-    m_speakerID(UNDEFINED_ID)
+    m_currentSpeakerID(UNDEFINED_ID)
 {
 
 }
 
 SpeakingTimeRecorder::~SpeakingTimeRecorder()
 {
-    //m_meetingsRegister.stop(m_currentMeetingId);
+    silence();
+    endMeeting();
 }
 
-const Participant &SpeakingTimeRecorder::addParticipant(const QString& firstName, const QString &lastName)
+ID SpeakingTimeRecorder::addParticipant(const QString& firstName, const QString &lastName)
 {
-    //ParticipantRegister::find if empty create
+    ID id = m_participantsRegister.get()->find(firstName, lastName);
+    if (id == UNDEFINED_ID)
+        id = m_participantsRegister.get()->create(firstName,lastName).getId();
+    m_meetingsRegister.get()->addParticipant(m_currentMeetingId, id);
+    return id;
 }
 
-bool SpeakingTimeRecorder::removeParticipant(id id)
+bool SpeakingTimeRecorder::removeParticipant(ID id)
 {
-//    bool result = false;
-//    if (!m_isStarted) {
-//        m_meeting.removeParticipant(id);
-//        result = true;
-//    }
-//    return result;
+    return m_meetingsRegister.get()->removeParticipant(m_currentMeetingId, id);
 }
 
-bool SpeakingTimeRecorder::continueMeeting(id meetingID)
+ID SpeakingTimeRecorder::createNewMeeting(const QString &name)
 {
-    //    if (meetingID != m_meeting.getId()) {
-    //        endMeeting();
-    //        m_meeting = *MeetingsRegister::instance().get(meetingID);
-    //        //updateParticipantList
-    //        startMeeting();
-    //    }
-}
-
-const Meeting &createNewMeeting(const QString &name)
-{
-    //return MeetingsRegister::instance().create(name);
+    return (m_currentMeetingId = m_meetingsRegister.get()->create(name).getId());
 }
 
 bool SpeakingTimeRecorder::startMeeting()
 {
-//    bool result = false;
-//    if (!m_isStarted) {
-//        Participant::setCurrentMeetingID(m_meeting.getId());
-//        m_meeting.setStartDate(QDate::currentDate());
-//        m_isStarted = true;
-//        result = true;
-//    }
-//    return result;
+    return m_meetingsRegister.get()->start(m_currentMeetingId);
 }
 
 bool SpeakingTimeRecorder::pauseMeeting()
 {
-//    bool result = false;
-//    if (m_isStarted && !m_isStopped && !m_isSuspended) {
-//        m_pauses.append(new Pause{QDateTime::currentDateTime(), QDateTime()});
-//        m_isSuspended = true;
-//        result = true;
-//    }
-//    return result;
+    return m_meetingsRegister.get()->pause(m_currentMeetingId);
 }
 
 bool SpeakingTimeRecorder::restartMeeting()
 {
-    bool result = false;
-    if (m_isStarted && (m_isStopped || m_isSuspended)) {
-        const_cast<Pause *>(m_pauses.last())->endTime = QDateTime::currentDateTime();
-        m_isStopped = false;
-        m_isSuspended = false;
-        result = true;
-    }
-    return result;
+    return m_meetingsRegister.get()->restart(m_currentMeetingId);
 }
 
 bool SpeakingTimeRecorder::endMeeting()
 {
-    bool result = false;
-    if (m_isStarted && !m_isStopped) {
-        m_isStopped = true;
-        result = true;
-    }
-    return result;
+    return m_meetingsRegister.get()->end(m_currentMeetingId);
 }
 
 void SpeakingTimeRecorder::silence()
@@ -105,21 +64,16 @@ void SpeakingTimeRecorder::silence()
     participantSpeaking(UNDEFINED_ID);
 }
 
-void SpeakingTimeRecorder::toggleSpeakingState(id id)
+void SpeakingTimeRecorder::toggleSpeakingState(ID id)
 {
-//    if (id != UNDEFINED_ID)
-//        m_meeting.getParticipant(id).toggleSpeakingState();
+    m_participantsRegister.get()->toggleSpeakingState(id);
 }
 
-void SpeakingTimeRecorder::participantSpeaking(id id)
+void SpeakingTimeRecorder::participantSpeaking(ID id)
 {
-    if (id == m_speakerID)
-        goto exit;
-
-    toggleSpeakingState(m_speakerID);
-    toggleSpeakingState(id);
-    m_speakerID = id;
-
-exit:
-    return;
+    if (id != m_currentSpeakerID) {
+        toggleSpeakingState(m_currentSpeakerID);
+        toggleSpeakingState(id);
+        m_currentSpeakerID = id;
+    }
 }

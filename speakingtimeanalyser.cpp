@@ -9,12 +9,7 @@ SpeakingTimeAnalyser::SpeakingTimeAnalyser(QObject *parent) :
 
 }
 
-RegisterVector<Meeting> SpeakingTimeAnalyser::getMeetings()
+SpeakingTimeAnalyser::~SpeakingTimeAnalyser()
 {
-    //return MeetingsRegister::instance().getRegisterVector();
-}
 
-RegisterVector<Participant> SpeakingTimeAnalyser::getParticipants()
-{
-    //return ParticipantsRegister::instance().getRegisterVector();
 }

@@ -10,34 +10,29 @@
 class Participant;
 class Meeting;
 
-extern const QString undefined_name;
+class ParticipantsRegister;
+class MeetingsRegister;
 
-typedef qint16 id;
-typedef quint64 duration;
+typedef qint16 ID;
+typedef quint64 Duration;
 
 
 typedef struct {
     QDateTime startTime;
     QDateTime endTime;
-} Pause;
-
-typedef struct {
-    QDateTime dateTime;
-    duration duration; //seconds
 } Record;
 
 template <typename T>
 using RegisterVector = QVector<const T *>;
 
-typedef QVector<id> IDs;
+typedef QVector<ID> IDs;
 typedef RegisterVector<Record> Records;
-typedef RegisterVector<Pause> Pauses;
 typedef RegisterVector<Meeting> Meetings;
 typedef RegisterVector<Participant> Participants;
 
 
 template<typename T>
-using RegisterHash = QHash<id, T *>;
+using RegisterHash = QHash<ID, T *>;
 
 typedef RegisterHash<Records> RecordVectorHash;
 

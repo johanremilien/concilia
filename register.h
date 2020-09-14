@@ -17,21 +17,22 @@ class Register
 {
 public:
     Register();
-    ~Register();
+    virtual ~Register();
     inline RegisterVector<T> getRegisterVector() const;
-    inline T &operator[](id id);
+    inline T &operator[](ID id);
 
 protected:
     const T &create();
     inline void clear();
-    inline void remove(id id);
-    inline T *get(id id) const;
-    inline T *itemNotFound(id id) const;
+    inline void remove(ID id);
+    inline T *get(ID id) const;
+    inline T *itemNotFound(ID id) const;
+    inline void exception(ID id) const;
     void process(std::function<bool(T &)> f) const;
 
 private:
     RegisterHash<T> m_register;
-    id m_counter;
+    ID m_counter;
     const char *m_typeinfo;
 };
 
@@ -51,16 +52,27 @@ Register<T>::~Register()
 }
 
 template<typename T>
-T *Register<T>::get(id id) const
+T *Register<T>::get(ID id) const
 {
-    return m_register.value(id, itemNotFound(id));
+    T *result = nullptr;
+    if (id != UNDEFINED_ID)
+        result = m_register.value(id, itemNotFound(id));
+    return result;
 }
 
 template<typename T>
-T *Register<T>::itemNotFound(id id) const
+T *Register<T>::itemNotFound(ID id) const
 {
     qWarning("%s index: %d not found.", m_typeinfo, id);
     return nullptr;
+}
+
+template<typename T>
+void Register<T>::exception(ID id) const
+{
+    std::ostringstream oss;
+    oss << m_typeinfo << " no corresponding index: " << id;
+    throw std::runtime_error(oss.str());
 }
 
 template<typename T>
@@ -82,15 +94,11 @@ RegisterVector<T> Register<T>::getRegisterVector() const
 }
 
 template<typename T>
-T &Register<T>::operator[](id id)
+T &Register<T>::operator[](ID id)
 {
-    if (m_register.contains(id)) {
-        return *m_register[id];
-    } else {
-        std::ostringstream oss;
-        oss << m_typeinfo << " no corresponding index: " << id;
-        throw std::runtime_error(oss.str());
-    }
+    if (!m_register.contains(id))
+        exception(id);
+    return *m_register[id];
 }
 
 template<typename T>
@@ -109,7 +117,7 @@ void Register<T>::clear() {
 }
 
 template<typename T>
-void Register<T>::remove(id id) {
+void Register<T>::remove(ID id) {
     if (m_register.contains(id))
         delete m_register.take(id);
 }
