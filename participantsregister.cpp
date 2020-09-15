@@ -96,11 +96,17 @@ const QString &ParticipantsRegister::setLastName(ID id, const QString &lastName)
 
 const Participant &ParticipantsRegister::rename(ID id, const QString &firstName, const QString &lastName)
 {
-    Participant *participant = get(id);
-    if (participant == nullptr)
-        exception(id);
-    (void) participant->setFirstName(firstName);
-    (void) participant->setLastName(lastName);
+    Participant *participant = nullptr;
+    ID foundID = find(firstName, lastName);
+    if (foundID == UNDEFINED_ID) {
+        participant = get(id);
+        if (participant == nullptr)
+            exception(id);
+        (void) participant->setFirstName(firstName);
+        (void) participant->setLastName(lastName);
+    } else {
+        participant = get(foundID);
+    }
     return *participant;
 }
 

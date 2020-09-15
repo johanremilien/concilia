@@ -26,7 +26,6 @@ protected:
     inline void clear();
     inline void remove(ID id);
     inline T *get(ID id) const;
-    inline T *itemNotFound(ID id) const;
     inline void exception(ID id) const;
     void process(std::function<bool(T &)> f) const;
 
@@ -56,15 +55,8 @@ T *Register<T>::get(ID id) const
 {
     T *result = nullptr;
     if (id != UNDEFINED_ID)
-        result = m_register.value(id, itemNotFound(id));
+        result = m_register.value(id, nullptr);
     return result;
-}
-
-template<typename T>
-T *Register<T>::itemNotFound(ID id) const
-{
-    qWarning("%s index: %d not found.", m_typeinfo, id);
-    return nullptr;
 }
 
 template<typename T>

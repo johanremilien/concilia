@@ -15,7 +15,9 @@ public:
     ID getCurrentMeetingId() const;
 
     Q_INVOKABLE ID createNewMeeting(const QString &name = QString());
+    Q_INVOKABLE const QString &renameMeeting(ID meetingID, const QString &name);
     Q_INVOKABLE ID addParticipant(const QString &firstName, const QString &lastName);
+    Q_INVOKABLE ID renameParticipant(ID id, const QString &firstName, const QString &lastName);
     Q_INVOKABLE bool removeParticipant(ID id);
     Q_INVOKABLE bool startMeeting();
     Q_INVOKABLE bool pauseMeeting();

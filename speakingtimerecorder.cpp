@@ -27,6 +27,11 @@ ID SpeakingTimeRecorder::addParticipant(const QString& firstName, const QString 
     return id;
 }
 
+ID SpeakingTimeRecorder::renameParticipant(ID id, const QString &firstName, const QString &lastName)
+{
+    return participantsRegister()->rename(id, firstName, lastName).getId();
+}
+
 bool SpeakingTimeRecorder::removeParticipant(ID id)
 {
     return meetingsRegister()->removeParticipant(m_currentMeetingId, id);
@@ -35,6 +40,11 @@ bool SpeakingTimeRecorder::removeParticipant(ID id)
 ID SpeakingTimeRecorder::createNewMeeting(const QString &name)
 {
     return (m_currentMeetingId = meetingsRegister()->create(name).getId());
+}
+
+const QString &SpeakingTimeRecorder::renameMeeting(ID meetingID, const QString &name)
+{
+    return meetingsRegister()->rename(meetingID, name).getName();
 }
 
 bool SpeakingTimeRecorder::startMeeting()

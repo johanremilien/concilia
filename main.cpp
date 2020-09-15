@@ -15,11 +15,14 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
+    qRegisterMetaType<ID>("ID");
+    engine.rootContext()->setContextProperty("UNDEFINED_ID", UNDEFINED_ID);
+
     SpeakingTimeRecorder speakingTimeRecorder;
-    engine.rootContext()->setContextProperty("recorder", &speakingTimeRecorder);
+    engine.rootContext()->setContextProperty("SpeakingTimeRecorder", &speakingTimeRecorder);
 
     SpeakingTimeAnalyser speakingTimeAnalyser;
-    engine.rootContext()->setContextProperty("analyser", &speakingTimeAnalyser);
+    engine.rootContext()->setContextProperty("SpeakingTimeAnalyser", &speakingTimeAnalyser);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
