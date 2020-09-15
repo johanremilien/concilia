@@ -1,12 +1,9 @@
 #ifndef SPEAKINGTIMEANALYSER_H
 #define SPEAKINGTIMEANALYSER_H
 
-#include <QObject>
-#include <memory>
+#include "speakingtimebase.h"
 
-#include "typedef.h"
-
-class SpeakingTimeAnalyser : public QObject
+class SpeakingTimeAnalyser : public SpeakingTimeBase
 {
     Q_OBJECT
 public:
