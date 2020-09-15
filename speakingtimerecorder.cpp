@@ -5,13 +5,11 @@
 #include "participant.h"
 
 SpeakingTimeRecorder::SpeakingTimeRecorder(QObject *parent) :
-    QObject(parent),
-    m_participantsRegister(new ParticipantsRegister()),
-    m_meetingsRegister(new MeetingsRegister()),
+    SpeakingTimeBase(parent),
     m_currentMeetingId(UNDEFINED_ID),
     m_currentSpeakerID(UNDEFINED_ID)
 {
-
+    initRegisters();
 }
 
 SpeakingTimeRecorder::~SpeakingTimeRecorder()
@@ -22,41 +20,41 @@ SpeakingTimeRecorder::~SpeakingTimeRecorder()
 
 ID SpeakingTimeRecorder::addParticipant(const QString& firstName, const QString &lastName)
 {
-    ID id = m_participantsRegister.get()->find(firstName, lastName);
+    ID id = participantsRegister()->find(firstName, lastName);
     if (id == UNDEFINED_ID)
-        id = m_participantsRegister.get()->create(firstName,lastName).getId();
-    m_meetingsRegister.get()->addParticipant(m_currentMeetingId, id);
+        id = participantsRegister()->create(firstName,lastName).getId();
+    meetingsRegister()->addParticipant(m_currentMeetingId, id);
     return id;
 }
 
 bool SpeakingTimeRecorder::removeParticipant(ID id)
 {
-    return m_meetingsRegister.get()->removeParticipant(m_currentMeetingId, id);
+    return meetingsRegister()->removeParticipant(m_currentMeetingId, id);
 }
 
 ID SpeakingTimeRecorder::createNewMeeting(const QString &name)
 {
-    return (m_currentMeetingId = m_meetingsRegister.get()->create(name).getId());
+    return (m_currentMeetingId = meetingsRegister()->create(name).getId());
 }
 
 bool SpeakingTimeRecorder::startMeeting()
 {
-    return m_meetingsRegister.get()->start(m_currentMeetingId);
+    return meetingsRegister()->start(m_currentMeetingId);
 }
 
 bool SpeakingTimeRecorder::pauseMeeting()
 {
-    return m_meetingsRegister.get()->pause(m_currentMeetingId);
+    return meetingsRegister()->pause(m_currentMeetingId);
 }
 
 bool SpeakingTimeRecorder::restartMeeting()
 {
-    return m_meetingsRegister.get()->restart(m_currentMeetingId);
+    return meetingsRegister()->restart(m_currentMeetingId);
 }
 
 bool SpeakingTimeRecorder::endMeeting()
 {
-    return m_meetingsRegister.get()->end(m_currentMeetingId);
+    return meetingsRegister()->end(m_currentMeetingId);
 }
 
 void SpeakingTimeRecorder::silence()
@@ -66,7 +64,7 @@ void SpeakingTimeRecorder::silence()
 
 void SpeakingTimeRecorder::toggleSpeakingState(ID id)
 {
-    m_participantsRegister.get()->toggleSpeakingState(id);
+    participantsRegister()->toggleSpeakingState(id);
 }
 
 void SpeakingTimeRecorder::participantSpeaking(ID id)

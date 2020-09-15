@@ -1,12 +1,9 @@
 #ifndef SPEAKINGTIMERECORDER_H
 #define SPEAKINGTIMERECORDER_H
 
-#include <QObject>
-#include <memory>
+#include "speakingtimebase.h"
 
-#include "typedef.h"
-
-class SpeakingTimeRecorder: public QObject
+class SpeakingTimeRecorder: public SpeakingTimeBase
 {
     Q_OBJECT
 
@@ -36,8 +33,6 @@ protected:
     void toggleSpeakingState(ID id);
 
 private:
-    std::unique_ptr<ParticipantsRegister> m_participantsRegister;
-    std::unique_ptr<MeetingsRegister> m_meetingsRegister;
     ID m_currentMeetingId;
     ID m_currentSpeakerID;
 };
