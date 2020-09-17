@@ -1,6 +1,4 @@
 #include "meeting.h"
-#include "participant.h"
-#include "meetingsregister.h"
 
 Meeting::Meeting(ID id) :
     RegistrableItem<Meeting>(id),
