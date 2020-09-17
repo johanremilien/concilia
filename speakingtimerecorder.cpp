@@ -74,7 +74,8 @@ void SpeakingTimeRecorder::silence()
 
 void SpeakingTimeRecorder::toggleSpeakingState(ID id)
 {
-    participantsRegister()->toggleSpeakingState(id);
+    if (id != UNDEFINED_ID)
+        participantsRegister()->toggleSpeakingState(id);
 }
 
 void SpeakingTimeRecorder::participantSpeaking(ID id)
