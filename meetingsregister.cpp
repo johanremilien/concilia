@@ -50,8 +50,10 @@ bool MeetingsRegister::start(ID id)
 {
     bool result = false;
     Meeting *meeting = get(id);
-    if (meeting)
+    if (meeting) {
         result = meeting->start();
+        Participant::setCurrentMeetingID(id);
+    }
     return result;
 }
 

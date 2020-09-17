@@ -20,7 +20,7 @@ public:
     bool getIsSpeaking() const;
     bool setIsSpeaking(bool isSpeaking);
 
-    Duration getTotalSpeakingTime(ID meetingID = UNDEFINED_ID) const;
+    Duration getTotalSpeakingTime(ID meetingID) const;
 
     inline void takePartInCurrentMeeting();
 
