@@ -22,7 +22,7 @@ public:
     inline T &operator[](ID id);
 
 protected:
-    const T *create();
+    const T &create();
     inline void clear();
     inline void remove(ID id);
     inline const T &value(ID id) const;
@@ -93,10 +93,10 @@ T &Register<T>::operator[](ID id)
 }
 
 template<typename T>
-const T *Register<T>::create()
+const T &Register<T>::create()
 {
     T item(m_counter++);
-    return &(*m_register.insert(item.getId(), item));
+    return *(m_register.insert(item.getId(), item));
 }
 
 template<typename T>
