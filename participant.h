@@ -1,9 +1,7 @@
 #ifndef PARTICIPANT_H
 #define PARTICIPANT_H
 
-#include <QString>
 #include <QVector>
-#include <type_traits>
 
 #include <register.h>
 #include "registrableitem.h"
@@ -11,11 +9,14 @@
 class Participant : public RegistrableItem<Participant>
 {
 public:
-    const QString &getFirstName() const;
-    const QString &setFirstName(const QString &firstName);
+    explicit Participant(ID id = UNDEFINED_ID);
+    ~Participant();
 
-    const QString &getLastName() const;
-    const QString &setLastName(const QString &lastName);
+    QString getFirstName() const;
+    QString setFirstName(QString firstName);
+
+    QString getLastName() const;
+    QString setLastName(QString lastName);
 
     bool getIsSpeaking() const;
     bool setIsSpeaking(bool isSpeaking);
@@ -28,10 +29,6 @@ public:
     static void setCurrentMeetingID(ID meetingID);
 
     friend class Register<Participant>;
-
-protected:
-    explicit Participant(ID id);
-    ~Participant();
 
 private:
     QString m_firstName;

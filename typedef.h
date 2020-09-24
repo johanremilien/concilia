@@ -35,20 +35,20 @@ typedef struct {
     QDateTime endTime;
 } Record;
 
-template <typename T>
-using RegisterVector = QVector<const T *>;
-
 typedef QVector<ID> IDs;
-typedef RegisterVector<Record> Records;
-typedef RegisterVector<Meeting> Meetings;
-typedef RegisterVector<Participant> Participants;
+typedef QVector<Record> Records;
+
+template <typename T>
+using RegisterVector = QVector<const T &>;
+
+typedef RegisterVector<const Meeting &> Meetings;
+typedef RegisterVector<const Participant &> Participants;
 
 
 template<typename T>
-using RegisterHash = QHash<ID, T *>;
+using RegisterHash = QHash<ID, T>;
 
 typedef RegisterHash<Records> RecordVectorHash;
-
 typedef RegisterHash<Meeting> MeetingHash;
 typedef RegisterHash<Participant> ParticipantHash;
 

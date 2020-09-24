@@ -2,11 +2,11 @@
 #include "meeting.h"
 #include "participant.h"
 
-const Meeting &MeetingsRegister::create(const QString &name)
+const Meeting *MeetingsRegister::create(QString name)
 {
     const Meeting *result;
     if (find(name) == UNDEFINED_ID) {
-        result = &create();
+        result = create();
         rename(result->getId(), name);
     } else {
         QLatin1Char separartor('_');
@@ -16,42 +16,34 @@ const Meeting &MeetingsRegister::create(const QString &name)
         if (isInteger)
             splitName.removeLast();
         QString newName = splitName.join(separartor).append(separartor + QString(index+1));
-        result = &create(newName);
+        result = create(newName);
     }
-    return *result;
+    return result;
 }
 
-const QString &MeetingsRegister::getName(ID id)
+QString MeetingsRegister::getName(ID id) const
 {
-    Meeting *meeting = get(id);
-    if (meeting == nullptr)
-        exception(id);
-    return get(id)->getName();
+    return value(id).getName();
 }
 
-const QString &MeetingsRegister::setName(ID id, const QString &name)
+QString MeetingsRegister::setName(ID id, QString name)
 {
-    Meeting *meeting = get(id);
-    if (meeting == nullptr)
-        exception(id);
-    return meeting->setName(name);
+    return operator[](id).setName(name);
 }
 
-const Meeting &MeetingsRegister::rename(ID id, const QString &name)
+const Meeting &MeetingsRegister::rename(ID id, QString name)
 {
-    Meeting *meeting = get(id);
-    if (meeting == nullptr)
-        exception(id);
-    meeting->setName(name);
-    return *meeting;
+    Meeting &meeting = operator[](id);
+    (void) meeting.setName(name);
+    return meeting;
 }
 
 bool MeetingsRegister::start(ID id)
 {
     bool result = false;
-    Meeting *meeting = get(id);
-    if (meeting) {
-        result = meeting->start();
+    Meeting &meeting = operator[](id);
+    if (meeting.getStartDate().isNull()) {
+        result = meeting.start();
         Participant::setCurrentMeetingID(id);
     }
     return result;
@@ -60,35 +52,33 @@ bool MeetingsRegister::start(ID id)
 bool MeetingsRegister::pause(ID id)
 {
     bool result = false;
-    Meeting *meeting = get(id);
-    if (meeting && !meeting->isSuspended())
-        result = meeting->togglePause();
+    Meeting &meeting = operator[](id);
+    if (!meeting.isSuspended())
+        result = meeting.togglePause();
     return result;
 }
 
 bool MeetingsRegister::restart(ID id)
 {
     bool result = false;
-    Meeting *meeting = get(id);
-    if (meeting && meeting->isSuspended())
-        result = meeting->togglePause();
+    Meeting &meeting = operator[](id);
+    if (meeting.isSuspended())
+        result = meeting.togglePause();
     return result;
 }
 
 bool MeetingsRegister::end(ID id)
 {
     bool result = false;
-    Meeting *meeting = get(id);
-    if (meeting && meeting->getEndDate().isNull())
-        result = meeting->end();
+    Meeting &meeting = operator[](id);
+    if (meeting.getEndDate().isNull())
+        result = meeting.end();
     return result;
 }
 
 void MeetingsRegister::addParticipant(ID meetingId, ID particpantId)
 {
-    Meeting *meeting = get(meetingId);
-    if (meeting)
-        meeting->addParticipant(particpantId);
+    operator[](meetingId).addParticipant(particpantId);
 }
 
 void MeetingsRegister::addParticipant(ID meetingId, const Participant &participant)
@@ -98,11 +88,7 @@ void MeetingsRegister::addParticipant(ID meetingId, const Participant &participa
 
 bool MeetingsRegister::removeParticipant(ID meetingId, ID participantId)
 {
-    bool result = false;
-    Meeting *meeting = get(meetingId);
-    if (meeting)
-        result = meeting->removeParticipant(participantId);
-    return result;
+    return operator[](meetingId).removeParticipant(participantId);
 }
 
 bool MeetingsRegister::removeParticipant(ID meetingId, const Participant &participant)
@@ -112,14 +98,10 @@ bool MeetingsRegister::removeParticipant(ID meetingId, const Participant &partic
 
 Duration MeetingsRegister::getDuration(ID id) const
 {
-    Duration result = 0;
-    Meeting *meeting = get(id);
-    if (meeting)
-        result = meeting->getDuration();
-    return result;
+    return value(id).getDuration();
 }
 
-ID MeetingsRegister::find(const QString &name) const
+ID MeetingsRegister::find(QString name) const
 {
     ID result = UNDEFINED_ID;
     process([&name, &result](const Meeting &meeting)
@@ -134,7 +116,7 @@ ID MeetingsRegister::find(const QString &name) const
     return result;
 }
 
-IDs MeetingsRegister::findIncompleteName(const QString &name) const
+IDs MeetingsRegister::findIncompleteName(QString name) const
 {
     IDs result;
     process([&name, &result](const Meeting &meeting)

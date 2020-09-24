@@ -18,7 +18,7 @@ SpeakingTimeRecorder::~SpeakingTimeRecorder()
     endMeeting();
 }
 
-ID SpeakingTimeRecorder::addParticipant(const QString& firstName, const QString &lastName)
+ID SpeakingTimeRecorder::addParticipant(QString  firstName, QString lastName)
 {
     ID id = participantsRegister()->find(firstName, lastName);
     if (id == UNDEFINED_ID)
@@ -27,22 +27,28 @@ ID SpeakingTimeRecorder::addParticipant(const QString& firstName, const QString 
     return id;
 }
 
-ID SpeakingTimeRecorder::renameParticipant(ID id, const QString &firstName, const QString &lastName)
+ID SpeakingTimeRecorder::renameParticipant(ID id, QString firstName, QString lastName)
 {
     return participantsRegister()->rename(id, firstName, lastName).getId();
 }
 
 bool SpeakingTimeRecorder::removeParticipant(ID id)
 {
-    return meetingsRegister()->removeParticipant(m_currentMeetingId, id);
+    bool result = false;
+    try {
+        result = meetingsRegister()->removeParticipant(m_currentMeetingId, id);
+    } catch (...) {
+
+    }
+    return result;
 }
 
-ID SpeakingTimeRecorder::createNewMeeting(const QString &name)
+ID SpeakingTimeRecorder::createNewMeeting(QString name)
 {
-    return (m_currentMeetingId = meetingsRegister()->create(name).getId());
+    return (m_currentMeetingId = meetingsRegister()->create(name)->getId());
 }
 
-const QString &SpeakingTimeRecorder::renameMeeting(ID meetingID, const QString &name)
+QString SpeakingTimeRecorder::renameMeeting(ID meetingID, QString name)
 {
     return meetingsRegister()->rename(meetingID, name).getName();
 }
@@ -64,7 +70,13 @@ bool SpeakingTimeRecorder::restartMeeting()
 
 bool SpeakingTimeRecorder::endMeeting()
 {
-    return meetingsRegister()->end(m_currentMeetingId);
+    bool result = false;
+    try {
+        result = meetingsRegister()->end(m_currentMeetingId);
+    } catch (...) {
+
+    }
+    return result;
 }
 
 void SpeakingTimeRecorder::silence()

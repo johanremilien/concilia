@@ -30,22 +30,22 @@ bool Meeting::removeParticipant(ID id)
     return m_participants.removeOne(id);
 }
 
-const QDateTime &Meeting::getStartDate() const
+QDateTime Meeting::getStartDate() const
 {
     return m_startDate;
 }
 
-const QDateTime &Meeting::getEndDate() const
+QDateTime Meeting::getEndDate() const
 {
     return m_endDate;
 }
 
-const QString &Meeting::getName() const
+QString Meeting::getName() const
 {
     return m_name;
 }
 
-const QString &Meeting::setName(const QString &name)
+QString Meeting::setName(QString name)
 {
     return (m_name = name);
 }
@@ -87,7 +87,7 @@ bool Meeting::togglePause()
 {
     static QDateTime startDateTime;
     if (m_isSuspended) {
-        m_pauses.push_back(new Record {startDateTime, QDateTime::currentDateTime()});
+        m_pauses.push_back(Record {startDateTime, QDateTime::currentDateTime()});
     } else {
         startDateTime = QDateTime::currentDateTime();
     }

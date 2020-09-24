@@ -1,28 +1,22 @@
 #include "participantsregister.h"
 #include "participant.h"
 
-const Participant &ParticipantsRegister::create(const QString &firstName, const QString &lastName)
+const Participant &ParticipantsRegister::create(QString firstName, QString lastName)
 {
-    return rename(create().getId(), firstName, lastName);
+    return rename(create()->getId(), firstName, lastName);
 }
 
-const QString &ParticipantsRegister::getFirstName(ID id) const
+QString ParticipantsRegister::getFirstName(ID id) const
 {
-    Participant *participant = get(id);
-    if (participant == nullptr)
-        exception(id);
-    return participant->getFirstName();
+    return value(id).getFirstName();
 }
 
-const QString &ParticipantsRegister::getLastName(ID id) const
+QString ParticipantsRegister::getLastName(ID id) const
 {
-    Participant *participant = get(id);
-    if (participant == nullptr)
-        exception(id);
-    return participant->getLastName();
+    return value(id).getLastName();
 }
 
-ID ParticipantsRegister::find(const QString &firstName, const QString &lastName) const
+ID ParticipantsRegister::find(QString firstName, QString lastName) const noexcept
 {
     ID result = UNDEFINED_ID;
     process([&firstName, &lastName, &result](const Participant & participant)
@@ -37,7 +31,7 @@ ID ParticipantsRegister::find(const QString &firstName, const QString &lastName)
     return  result;
 }
 
-IDs ParticipantsRegister::findByFirstName(const QString &firstName) const
+IDs ParticipantsRegister::findByFirstName(QString firstName) const noexcept
 {
     IDs result;
     process([&firstName, &result](const Participant &participant)
@@ -50,7 +44,7 @@ IDs ParticipantsRegister::findByFirstName(const QString &firstName) const
     return result;
 }
 
-IDs ParticipantsRegister::findByLastName(const QString &lastName) const
+IDs ParticipantsRegister::findByLastName(QString lastName) const noexcept
 {
     IDs result;
     process([&lastName, &result](const Participant &participant)
@@ -63,7 +57,7 @@ IDs ParticipantsRegister::findByLastName(const QString &lastName) const
     return result;
 }
 
-IDs ParticipantsRegister::findIncompleteNames(const QString &firstName, const QString &lastName) const
+IDs ParticipantsRegister::findIncompleteNames(QString firstName, QString lastName) const noexcept
 {
     IDs result;
     process([&firstName, &lastName, &result](const Participant &participant)
@@ -78,51 +72,37 @@ IDs ParticipantsRegister::findIncompleteNames(const QString &firstName, const QS
     return result;
 }
 
-const QString &ParticipantsRegister::setFirstName(ID id, const QString &firstName)
+QString ParticipantsRegister::setFirstName(ID id, QString firstName)
 {
-    Participant *participant = get(id);
-    if (participant == nullptr)
-        exception(id);
-    return participant->setFirstName(firstName);;
+    return operator[](id).setFirstName(firstName);
 }
 
-const QString &ParticipantsRegister::setLastName(ID id, const QString &lastName)
+QString ParticipantsRegister::setLastName(ID id, QString lastName)
 {
-    Participant *participant = get(id);
-    if (participant == nullptr)
-        exception(id);
-    return participant->setLastName(lastName);
+    return operator[](id).setLastName(lastName);
 }
 
-const Participant &ParticipantsRegister::rename(ID id, const QString &firstName, const QString &lastName)
+const Participant &ParticipantsRegister::rename(ID id, QString firstName, QString lastName) noexcept
 {
     Participant *participant = nullptr;
     ID foundID = find(firstName, lastName);
     if (foundID == UNDEFINED_ID) {
-        participant = get(id);
-        if (participant == nullptr)
-            exception(id);
+        participant = &operator[](id);
         (void) participant->setFirstName(firstName);
         (void) participant->setLastName(lastName);
     } else {
-        participant = get(foundID);
+        participant = &operator[](foundID);
     }
     return *participant;
 }
 
 bool ParticipantsRegister::toggleSpeakingState(ID id)
 {
-    Participant *participant = get(id);
-    if (participant == nullptr)
-        exception(id);
-    return (participant->getIsSpeaking() ? participant->setIsSpeaking(false)
-                                         : participant->setIsSpeaking(true));
+    Participant &participant = operator[](id);
+    return participant.setIsSpeaking(!participant.getIsSpeaking());
 }
 
 Duration ParticipantsRegister::getTotalSpeakingTime(ID participantID, ID meetingID) const
 {
-    Participant *participant = get(participantID);
-    if (participant == nullptr)
-        exception(participantID);
-    return participant->getTotalSpeakingTime(meetingID);
+    return value(participantID).getTotalSpeakingTime(meetingID);
 }

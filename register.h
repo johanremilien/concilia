@@ -22,10 +22,10 @@ public:
     inline T &operator[](ID id);
 
 protected:
-    const T &create();
+    const T *create();
     inline void clear();
     inline void remove(ID id);
-    inline T *get(ID id) const;
+    inline const T &value(ID id) const;
     inline void exception(ID id) const;
     void process(std::function<bool(T &)> f) const;
 
@@ -51,12 +51,11 @@ Register<T>::~Register()
 }
 
 template<typename T>
-T *Register<T>::get(ID id) const
+const T &Register<T>::value(ID id) const
 {
-    T *result = nullptr;
-    if (id != UNDEFINED_ID)
-        result = m_register.value(id, nullptr);
-    return result;
+    if (!m_register.contains(id))
+        exception(id);
+    return m_register.value(id);
 }
 
 template<typename T>
@@ -70,8 +69,8 @@ void Register<T>::exception(ID id) const
 template<typename T>
 void Register<T>::process(std::function<bool(T &)> func) const
 {
-    for (const auto &item : m_register.values()) {
-        if (func(*item))
+    for (auto &item : m_register.values()) {
+        if (func(item))
             break;
     }
 }
@@ -80,7 +79,7 @@ template<typename T>
 RegisterVector<T> Register<T>::getRegisterVector() const
 {
     RegisterVector<T> result;
-    for (auto & item : m_register.values())
+    for (auto &item : m_register.values())
         result.append(item);
     return result;
 }
@@ -90,28 +89,25 @@ T &Register<T>::operator[](ID id)
 {
     if (!m_register.contains(id))
         exception(id);
-    return *m_register[id];
+    return m_register[id];
 }
 
 template<typename T>
-const T &Register<T>::create()
+const T *Register<T>::create()
 {
-    T *item = new T(m_counter++);
-    return **(m_register.insert(item->getId(), item));
+    T item(m_counter++);
+    return &(*m_register.insert(item.getId(), item));
 }
 
 template<typename T>
 void Register<T>::clear() {
-    for (auto & item : m_register.values())
-        delete item;
     m_register.clear();
     m_counter = 0;
 }
 
 template<typename T>
 void Register<T>::remove(ID id) {
-    if (m_register.contains(id))
-        delete m_register.take(id);
+    m_register.take(id);
 }
 
 #endif // REGISTER_H
