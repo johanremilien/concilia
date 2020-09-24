@@ -6,15 +6,16 @@ const Meeting *MeetingsRegister::create(QString name)
 {
     const Meeting *result;
     if (find(name) == UNDEFINED_ID) {
-        result = create();
+        result = &create();
         rename(result->getId(), name);
     } else {
         QLatin1Char separartor('_');
         bool isInteger;
         QStringList splitName = name.split(separartor);
         int index = splitName.last().toInt(&isInteger, 10);
-        if (isInteger)
+        if (isInteger) {
             splitName.removeLast();
+        }
         QString newName = splitName.join(separartor).append(separartor + QString(index+1));
         result = create(newName);
     }
@@ -53,8 +54,9 @@ bool MeetingsRegister::pause(ID id)
 {
     bool result = false;
     Meeting &meeting = operator[](id);
-    if (!meeting.isSuspended())
+    if (!meeting.isSuspended()) {
         result = meeting.togglePause();
+    }
     return result;
 }
 
@@ -62,8 +64,9 @@ bool MeetingsRegister::restart(ID id)
 {
     bool result = false;
     Meeting &meeting = operator[](id);
-    if (meeting.isSuspended())
+    if (meeting.isSuspended()) {
         result = meeting.togglePause();
+    }
     return result;
 }
 
@@ -71,8 +74,9 @@ bool MeetingsRegister::end(ID id)
 {
     bool result = false;
     Meeting &meeting = operator[](id);
-    if (meeting.getEndDate().isNull())
+    if (meeting.getEndDate().isNull()) {
         result = meeting.end();
+    }
     return result;
 }
 
@@ -122,8 +126,9 @@ IDs MeetingsRegister::findIncompleteName(QString name) const
     process([&name, &result](const Meeting &meeting)
     {
         bool exitLoop = false;
-        if (meeting.getName().contains(name))
+        if (meeting.getName().contains(name)) {
             result.append(meeting.getId());
+        }
         return exitLoop;
     });
     return result;

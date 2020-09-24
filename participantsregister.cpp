@@ -3,7 +3,7 @@
 
 const Participant &ParticipantsRegister::create(QString firstName, QString lastName)
 {
-    return rename(create()->getId(), firstName, lastName);
+    return rename(create().getId(), firstName, lastName);
 }
 
 QString ParticipantsRegister::getFirstName(ID id) const
@@ -37,8 +37,9 @@ IDs ParticipantsRegister::findByFirstName(QString firstName) const noexcept
     process([&firstName, &result](const Participant &participant)
     {
         bool exitLoop = false;
-        if (participant.getFirstName() == firstName)
+        if (participant.getFirstName() == firstName) {
             result.append(participant.getId());
+        }
         return exitLoop;
     });
     return result;
@@ -50,8 +51,9 @@ IDs ParticipantsRegister::findByLastName(QString lastName) const noexcept
     process([&lastName, &result](const Participant &participant)
     {
         bool exitLoop = false;
-        if (participant.getLastName() == lastName)
+        if (participant.getLastName() == lastName) {
             result.append(participant.getId());
+        }
         return exitLoop;
     });
     return result;

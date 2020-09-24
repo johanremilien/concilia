@@ -21,8 +21,9 @@ SpeakingTimeRecorder::~SpeakingTimeRecorder()
 ID SpeakingTimeRecorder::addParticipant(QString  firstName, QString lastName)
 {
     ID id = participantsRegister()->find(firstName, lastName);
-    if (id == UNDEFINED_ID)
+    if (id == UNDEFINED_ID) {
         id = participantsRegister()->create(firstName,lastName).getId();
+    }
     meetingsRegister()->addParticipant(m_currentMeetingId, id);
     return id;
 }
@@ -86,8 +87,9 @@ void SpeakingTimeRecorder::silence()
 
 void SpeakingTimeRecorder::toggleSpeakingState(ID id)
 {
-    if (id != UNDEFINED_ID)
+    if (id != UNDEFINED_ID) {
         participantsRegister()->toggleSpeakingState(id);
+    }
 }
 
 void SpeakingTimeRecorder::participantSpeaking(ID id)

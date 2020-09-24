@@ -21,8 +21,9 @@ Meeting::~Meeting()
 
 void Meeting::addParticipant(ID id)
 {
-    if (!m_participants.contains(id))
+    if (!m_participants.contains(id)) {
         m_participants.append(id);
+    }
 }
 
 bool Meeting::removeParticipant(ID id)

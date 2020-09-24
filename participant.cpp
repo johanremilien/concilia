@@ -28,9 +28,8 @@ QString Participant::getLastName() const
 
 void Participant::takePartInCurrentMeeting()
 {
-    if (s_currentMeetingID != UNDEFINED_ID) {
-        if (!m_records.contains(s_currentMeetingID))
-            m_records.insert(s_currentMeetingID, QVector<Record>());
+    if (!m_records.contains(s_currentMeetingID)) {
+        m_records.insert(s_currentMeetingID, QVector<Record>());
     }
 }
 
