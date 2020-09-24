@@ -16,12 +16,12 @@ Participant::~Participant()
 
 }
 
-const QString &Participant::getFirstName() const
+QString Participant::getFirstName() const
 {
     return m_firstName;
 }
 
-const QString &Participant::getLastName() const
+QString Participant::getLastName() const
 {
     return m_lastName;
 }
@@ -30,7 +30,7 @@ void Participant::takePartInCurrentMeeting()
 {
     if (s_currentMeetingID != UNDEFINED_ID) {
         if (!m_records.contains(s_currentMeetingID))
-            m_records.insert(s_currentMeetingID, new QVector<const Record *>());
+            m_records.insert(s_currentMeetingID, QVector<Record>());
     }
 }
 
@@ -41,8 +41,8 @@ Duration Participant::getTotalSpeakingTime(ID meetingID) const
         for (const auto & meetingID : m_records.keys())
             totalSpeakingTime += getTotalSpeakingTime(meetingID);
     } else if (m_records.contains(meetingID)) {
-        for (const auto &record : *m_records.value(meetingID))
-            totalSpeakingTime += record->startTime.secsTo(record->endTime);
+        for (const auto &record : m_records.value(meetingID))
+            totalSpeakingTime += record.startTime.secsTo(record.endTime);
     }
     return totalSpeakingTime;
 }
@@ -57,12 +57,12 @@ bool Participant::operator==(const Participant & item)
     return (m_firstName == item.m_firstName && m_lastName == item.m_lastName);
 };
 
-const QString &Participant::setFirstName(const QString &firstName)
+QString Participant::setFirstName(QString firstName)
 {
     return (m_firstName = firstName);
 }
 
-const QString &Participant::setLastName(const QString &lastName)
+QString Participant::setLastName(QString lastName)
 {
     return (m_lastName = lastName);
 }
@@ -80,8 +80,7 @@ bool Participant::setIsSpeaking(bool isSpeaking)
             startDateTime = QDateTime::currentDateTime();
         } else {
             takePartInCurrentMeeting();
-            m_records[s_currentMeetingID]->push_back(new Record {startDateTime,
-                                                                 QDateTime::currentDateTime()});
+            m_records[s_currentMeetingID].push_back(Record {startDateTime, QDateTime::currentDateTime()});
         }
     }
     return m_isSpeaking;

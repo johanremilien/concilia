@@ -10,10 +10,13 @@
 class Meeting : public RegistrableItem<Meeting>
 {
 public:
-    const QDateTime &getStartDate() const;
-    const QDateTime &getEndDate() const;
-    const QString &getName() const;
-    const QString &setName(const QString &name);
+    explicit Meeting(ID id = UNDEFINED_ID);
+    ~Meeting();
+
+    QDateTime getStartDate() const;
+    QDateTime getEndDate() const;
+    QString getName() const;
+    QString setName(QString name);
     bool isStarted() const;
     bool isSuspended() const;
     bool isEnded() const;
@@ -23,13 +26,9 @@ public:
     void addParticipant(ID id);
     bool removeParticipant(ID id);
     Duration getDuration() const;
-    virtual inline bool operator==(const Meeting &) override;
+    virtual inline bool operator==(const Meeting &meeting) override;
 
     friend class Register<Meeting>;
-
-protected:
-    explicit Meeting(ID id);
-    ~Meeting();
 
 private:
     QString m_name;
