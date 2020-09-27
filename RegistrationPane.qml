@@ -9,8 +9,6 @@ Widgets.Pane {
     readonly property size fieldSize: "200x40" //"width x height"
     property alias meetingEditZone: meetingEditZone
 
-    title: qsTr("Registration")
-
     RowLayout {
         id: meetingEditZone
         property int meetingID: UNDEFINED_ID
@@ -25,9 +23,9 @@ Widgets.Pane {
             width: fieldSize.width
             onEditingFinished: {
                 if (meetingEditZone.meetingID === UNDEFINED_ID)
-                    meetingEditZone.meetingID = SpeakingTimeRecorder.createNewMeeting(text)
+                    meetingEditZone.meetingID = SpeakingTimeRegister.createNewMeeting(text)
                 else
-                    SpeakingTimeRecorder.renameMeeting(meetingEditZone.meetingID, text)
+                    meetingEditZone.name = SpeakingTimeRegister.renameMeeting(meetingEditZone.meetingID, text)
             }
         }
     }
@@ -48,47 +46,53 @@ Widgets.Pane {
         }
     }
 
-    ColumnLayout {
-        id: profileLayout
+    ScrollView {
         Layout.fillHeight: true
         Layout.preferredWidth: registration.width
+        clip: true
 
-        Repeater {
-            id: repeater
-            model: 1
-            onItemAdded: item.focus = true
-            GroupBox {
-                id: participantEditZone
-                property int participantID: UNDEFINED_ID
-                property alias firstName: firstNameField.text
-                property alias lastName: lastNameField.text
-                RowLayout {
-                    anchors.fill: parent
-                    TextField {
-                        id: firstNameField
-                        height: fieldSize.height
-                        width: fieldSize.width
-                        onEditingFinished: focus = false
-                        placeholderText: qsTr("Enter first name")
-                    }
-                    TextField {
-                        id: lastNameField
-                        height: fieldSize.height
-                        width: fieldSize.width
-                        onEditingFinished: focus = false
-                        placeholderText: qsTr("Enter last name")
-                    }
-                    Button {
-                        id: validateButton
-                        text: qsTr("OK")
-                        onClicked: {
-                            if (participantEditZone.participantID === UNDEFINED_ID)
-                                participantEditZone.participantID = SpeakingTimeRecorder.addParticipant(firstName.text,
-                                                                                                        lastName.text)
-                            else
-                                participantEditZone.participantID = SpeakingTimeRecorder.renameParticipant(participantEditZone.participantID,
-                                                                                                           participantEditZone.firstName,
-                                                                                                           participantEditZone.lastName);
+        ColumnLayout {
+            id: profileLayout
+            anchors.fill: parent
+            Repeater {
+                id: repeater
+                model: SpeakingTimeRegister.participantsList()
+                onItemAdded: item.focus = true
+                GroupBox {
+                    id: participantEditZone
+                    property int participantID: UNDEFINED_ID
+                    property alias firstName: firstNameField.text
+                    property alias lastName: lastNameField.text
+                    RowLayout {
+                        anchors.fill: parent
+                        TextField {
+                            id: firstNameField
+                            height: fieldSize.height
+                            width: fieldSize.width
+                            onEditingFinished: focus = false
+                            placeholderText: qsTr("Enter first name")
+                        }
+                        TextField {
+                            id: lastNameField
+                            height: fieldSize.height
+                            width: fieldSize.width
+                            onEditingFinished: focus = false
+                            placeholderText: qsTr("Enter last name")
+                        }
+                        Button {
+                            id: validateButton
+                            text: qsTr("OK")
+                            onClicked: {
+                                if (participantEditZone.participantID === UNDEFINED_ID)
+                                    participantEditZone.participantID =
+                                            SpeakingTimeRegister.addParticipant(firstName.text,
+                                                                                lastName.text)
+                                else
+                                    participantEditZone.participantID =
+                                            SpeakingTimeRegister.renameParticipant(participantEditZone.participantID,
+                                                                                   participantEditZone.firstName,
+                                                                                   participantEditZone.lastName);
+                            }
                         }
                     }
                 }
@@ -100,6 +104,6 @@ Widgets.Pane {
         id: button
         Layout.alignment: Qt.AlignHCenter
         text: qsTr("Add")
-        onClicked: repeater.model++ //dummy -> add new item
+        onClicked: SpeakingTimeRegister.addParticipant()
     }
 }

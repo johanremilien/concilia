@@ -16,9 +16,10 @@ ApplicationWindow {
         id: swipeView
         width: window.width
         height: window.height
-        RegistrationPane { id: registration }
-        RecordPane { id: record }
-        ReportPane { id: report }
+        RegistrationPane { id: registration; title: qsTr("Registration") }
+        RecordingPane { id: recording; title: qsTr("Recording") }
+        AnalysisPane { id: analysis; title: qsTr("Analysis") }
+        ReportPanel { id: report; title: qsTr("Report") }
     }
 
     InputPanel {

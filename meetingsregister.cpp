@@ -7,7 +7,8 @@ const Meeting *MeetingsRegister::create(QString name)
     const Meeting *result;
     if (find(name) == UNDEFINED_ID) {
         result = &create();
-        rename(result->getId(), name);
+        qDebug() << result->id();
+        rename(result->id(), name);
     } else {
         QLatin1Char separartor('_');
         bool isInteger;
@@ -22,14 +23,14 @@ const Meeting *MeetingsRegister::create(QString name)
     return result;
 }
 
-QString MeetingsRegister::getName(ID id) const
+QString MeetingsRegister::name(ID id) const
 {
-    return value(id).getName();
+    return value(id).name();
 }
 
-QString MeetingsRegister::setName(ID id, QString name)
+void MeetingsRegister::setName(ID id, QString name)
 {
-    return operator[](id).setName(name);
+    operator[](id).setName(name);
 }
 
 const Meeting &MeetingsRegister::rename(ID id, QString name)
@@ -43,7 +44,7 @@ bool MeetingsRegister::start(ID id)
 {
     bool result = false;
     Meeting &meeting = operator[](id);
-    if (meeting.getStartDate().isNull()) {
+    if (meeting.startDate().isNull()) {
         result = meeting.start();
         Participant::setCurrentMeetingID(id);
     }
@@ -74,7 +75,7 @@ bool MeetingsRegister::end(ID id)
 {
     bool result = false;
     Meeting &meeting = operator[](id);
-    if (meeting.getEndDate().isNull()) {
+    if (meeting.endDate().isNull()) {
         result = meeting.end();
     }
     return result;
@@ -87,7 +88,7 @@ void MeetingsRegister::addParticipant(ID meetingId, ID particpantId)
 
 void MeetingsRegister::addParticipant(ID meetingId, const Participant &participant)
 {
-    addParticipant(meetingId, participant.getId());
+    addParticipant(meetingId, participant.id());
 }
 
 bool MeetingsRegister::removeParticipant(ID meetingId, ID participantId)
@@ -97,12 +98,12 @@ bool MeetingsRegister::removeParticipant(ID meetingId, ID participantId)
 
 bool MeetingsRegister::removeParticipant(ID meetingId, const Participant &participant)
 {
-    return removeParticipant(meetingId, participant.getId());
+    return removeParticipant(meetingId, participant.id());
 }
 
-Duration MeetingsRegister::getDuration(ID id) const
+Duration MeetingsRegister::duration(ID id) const
 {
-    return value(id).getDuration();
+    return value(id).duration();
 }
 
 ID MeetingsRegister::find(QString name) const
@@ -111,8 +112,8 @@ ID MeetingsRegister::find(QString name) const
     process([&name, &result](const Meeting &meeting)
     {
         bool exitLoop = false;
-        if (meeting.getName() == name) {
-            result = meeting.getId();
+        if (meeting.name() == name) {
+            result = meeting.id();
             exitLoop = true;
         }
         return exitLoop;
@@ -126,10 +127,15 @@ IDs MeetingsRegister::findIncompleteName(QString name) const
     process([&name, &result](const Meeting &meeting)
     {
         bool exitLoop = false;
-        if (meeting.getName().contains(name)) {
-            result.append(meeting.getId());
+        if (meeting.name().contains(name)) {
+            result.append(meeting.id());
         }
         return exitLoop;
     });
     return result;
+}
+
+IDs MeetingsRegister::particpantsList(ID meetingId)
+{
+    return operator[](meetingId).participants();
 }

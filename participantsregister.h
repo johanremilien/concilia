@@ -7,13 +7,13 @@ class ParticipantsRegister : public Register<Participant>
 {
 public:
     const Participant &create(QString firstName, QString lastName);
-    QString getFirstName(ID id) const;
-    QString setFirstName(ID id, QString firstName);
-    QString getLastName(ID id) const;
-    inline QString setLastName(ID id, QString lastName);
+    QString firstName(ID id) const;
+    void setFirstName(ID id, QString firstName);
+    QString lastName(ID id) const;
+    inline void setLastName(ID id, QString lastName);
     const Participant &rename(ID id, QString firstName, QString lastName) noexcept;
-    bool toggleSpeakingState(ID id);
-    Duration getTotalSpeakingTime(ID participantID,ID meetingID = UNDEFINED_ID) const;
+    void toggleSpeakingState(ID id);
+    Duration totalSpeakingTime(ID participantID,ID meetingID = UNDEFINED_ID) const;
 
     ID find(QString firstName,QString lastName) const noexcept;
     IDs findByFirstName(QString firstName) const noexcept;

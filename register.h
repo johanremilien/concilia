@@ -9,7 +9,6 @@
 
 #include "typedef.h"
 
-template <typename>
 class RegistrableItem;
 
 template <typename T>
@@ -18,7 +17,6 @@ class Register
 public:
     Register();
     virtual ~Register();
-    inline RegisterVector<T> getRegisterVector() const;
     inline T &operator[](ID id);
 
 protected:
@@ -38,10 +36,10 @@ private:
 template<typename T>
 Register<T>::Register() :
     m_register(),
-    m_counter(0),
+    m_counter(-1),
     m_typeinfo(typeid(T).name())
 {
-    static_assert(std::is_base_of<RegistrableItem<T>, T>::value, "must derive from RegistrableItem");
+    //static_assert(std::is_base_of<RegistrableItem, T>::value, "must derive from RegistrableItem");
 }
 
 template<typename T>
@@ -76,15 +74,6 @@ void Register<T>::process(std::function<bool(T &)> func) const
 }
 
 template<typename T>
-RegisterVector<T> Register<T>::getRegisterVector() const
-{
-    RegisterVector<T> result;
-    for (auto &item : m_register.values())
-        result.append(item);
-    return result;
-}
-
-template<typename T>
 T &Register<T>::operator[](ID id)
 {
     if (!m_register.contains(id))
@@ -95,18 +84,21 @@ T &Register<T>::operator[](ID id)
 template<typename T>
 const T &Register<T>::create()
 {
-    T item(m_counter++);
-    return *(m_register.insert(item.getId(), item));
+    m_counter++;
+    qDebug() << m_typeinfo << "create" << m_counter;
+    return *(m_register.insert(m_counter, T(m_counter)));
 }
 
 template<typename T>
 void Register<T>::clear() {
+    qDebug() << m_typeinfo << "clear";
     m_register.clear();
     m_counter = 0;
 }
 
 template<typename T>
 void Register<T>::remove(ID id) {
+    qDebug() << m_typeinfo << "remove" << id;
     m_register.take(id);
 }
 

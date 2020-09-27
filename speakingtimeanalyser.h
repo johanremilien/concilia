@@ -8,7 +8,7 @@ class SpeakingTimeAnalyser : public SpeakingTimeBase
     Q_OBJECT
 public:
     SpeakingTimeAnalyser(QObject *parent = nullptr);
-    ~SpeakingTimeAnalyser();
+    ~SpeakingTimeAnalyser() = default;
 };
 
 #endif // SPEAKINGTIMEANALYSER_H

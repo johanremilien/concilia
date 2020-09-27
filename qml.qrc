@@ -3,8 +3,9 @@
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
         <file>RegistrationPane.qml</file>
-        <file>RecordPane.qml</file>
-        <file>ReportPane.qml</file>
+        <file>RecordingPane.qml</file>
+        <file>AnalysisPane.qml</file>
         <file>Pane.qml</file>
+        <file>ReportPanel.qml</file>
     </qresource>
 </RCC>

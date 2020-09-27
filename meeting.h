@@ -1,22 +1,24 @@
 #ifndef MEETING_H
 #define MEETING_H
 
-#include <QHash>
-#include <QDateTime>
-
 #include "register.h"
 #include "registrableitem.h"
 
-class Meeting : public RegistrableItem<Meeting>
+class Meeting : public RegistrableItem
 {
-public:
-    explicit Meeting(ID id = UNDEFINED_ID);
-    ~Meeting();
+    Q_OBJECT
 
-    QDateTime getStartDate() const;
-    QDateTime getEndDate() const;
-    QString getName() const;
-    QString setName(QString name);
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+
+public:
+    explicit Meeting(ID id = UNDEFINED_ID, QObject *parent = nullptr);
+    Meeting(const Meeting &m);
+    ~Meeting() = default;
+
+    QDateTime startDate() const;
+    QDateTime endDate() const;
+    QString name() const;
+    void setName(QString name);
     bool isStarted() const;
     bool isSuspended() const;
     bool isEnded() const;
@@ -25,10 +27,15 @@ public:
     bool end();
     void addParticipant(ID id);
     bool removeParticipant(ID id);
-    Duration getDuration() const;
-    virtual inline bool operator==(const Meeting &meeting) override;
+    IDs participants();
+    Duration duration() const;
+    Meeting &operator=(const Meeting &m);
+    bool operator==(const Meeting &m);
 
     friend class Register<Meeting>;
+
+signals:
+    void nameChanged(QString name);
 
 private:
     QString m_name;

@@ -5,14 +5,10 @@
 #include "participant.h"
 
 #include <cmath>
+#include <algorithm>
 
 SpeakingTimeAnalyser::SpeakingTimeAnalyser(QObject *parent) :
     SpeakingTimeBase(parent)
-{
-
-}
-
-SpeakingTimeAnalyser::~SpeakingTimeAnalyser()
 {
 
 }
