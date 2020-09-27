@@ -1,7 +1,7 @@
 #include "meeting.h"
 
-Meeting::Meeting(ID id) :
-    RegistrableItem<Meeting>(id),
+Meeting::Meeting(ID id, QObject *parent) :
+    RegistrableItem(id, parent),
     m_name(QString()),
     m_participants(),
     m_isSuspended(false),
@@ -14,9 +14,17 @@ Meeting::Meeting(ID id) :
     m_isEnded = !m_endDate.isNull();
 }
 
-Meeting::~Meeting()
+Meeting::Meeting(const Meeting &m) :
+    RegistrableItem(m.id(), m.parent()),
+    m_name(m.m_name),
+    m_participants(m.m_participants),
+    m_isStarted(m.m_isStarted),
+    m_isSuspended(m.m_isSuspended),
+    m_isEnded(m.m_isEnded),
+    m_startDate(m.m_startDate),
+    m_endDate(m.m_endDate),
+    m_duration(m.m_duration)
 {
-
 }
 
 void Meeting::addParticipant(ID id)
@@ -31,24 +39,31 @@ bool Meeting::removeParticipant(ID id)
     return m_participants.removeOne(id);
 }
 
-QDateTime Meeting::getStartDate() const
+IDs Meeting::participants()
+{
+    return m_participants;
+}
+
+QDateTime Meeting::startDate() const
 {
     return m_startDate;
 }
 
-QDateTime Meeting::getEndDate() const
+QDateTime Meeting::endDate() const
 {
     return m_endDate;
 }
 
-QString Meeting::getName() const
+QString Meeting::name() const
 {
     return m_name;
 }
 
-QString Meeting::setName(QString name)
+void Meeting::setName(QString name)
 {
-    return (m_name = name);
+    if (name != m_name) {
+        emit nameChanged(m_name = name);
+    }
 }
 
 bool Meeting::isStarted() const
@@ -65,14 +80,29 @@ bool Meeting::isEnded() const
     return m_isEnded;
 }
 
-Duration Meeting::getDuration() const
+Duration Meeting::duration() const
 {
     return m_duration;
 }
 
-bool Meeting::operator==(const Meeting & meeting)
+Meeting &Meeting::operator=(const Meeting &m)
 {
-    return (m_name == meeting.m_name);
+    setId(m.id());
+    setName(m.m_name);
+    m_participants = m.m_participants;
+    m_isStarted = m.m_isStarted;
+    m_isSuspended = m.m_isSuspended;
+    m_isEnded = m.m_isEnded;
+    m_startDate = m.m_startDate;
+    m_endDate = m.m_endDate;
+    m_duration = m.m_duration;
+    m_pauses = m.m_pauses;
+    return *this;
+}
+
+bool Meeting::operator==(const Meeting &m)
+{
+    return (m_name == m.m_name);
 }
 
 bool Meeting::start()

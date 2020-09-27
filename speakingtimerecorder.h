@@ -11,14 +11,6 @@ public:
     SpeakingTimeRecorder(QObject *parent =  nullptr);
     ~SpeakingTimeRecorder();
 
-    //may be useless
-    ID getCurrentMeetingId() const;
-
-    Q_INVOKABLE ID createNewMeeting(QString name = QString());
-    Q_INVOKABLE QString renameMeeting(ID meetingID, QString name);
-    Q_INVOKABLE ID addParticipant(QString firstName, QString lastName);
-    Q_INVOKABLE ID renameParticipant(ID id, QString firstName, QString lastName);
-    Q_INVOKABLE bool removeParticipant(ID id);
     Q_INVOKABLE bool startMeeting();
     Q_INVOKABLE bool pauseMeeting();
     Q_INVOKABLE bool restartMeeting();
@@ -35,7 +27,7 @@ protected:
     void toggleSpeakingState(ID id);
 
 private:
-    ID m_currentMeetingId;
+    ID m_currentMeetingID;
     ID m_currentSpeakerID;
 };
 

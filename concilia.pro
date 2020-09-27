@@ -19,9 +19,11 @@ SOURCES += \
         meetingsregister.cpp \
         participant.cpp \
         participantsregister.cpp \
+        registrableitem.cpp \
         speakingtimeanalyser.cpp \
         speakingtimebase.cpp \
-        speakingtimerecorder.cpp
+        speakingtimerecorder.cpp \
+        speakingtimeregister.cpp
 
 RESOURCES += qml.qrc
 
@@ -49,4 +51,5 @@ HEADERS += \
     speakingtimeanalyser.h \
     speakingtimebase.h \
     speakingtimerecorder.h \
+    speakingtimeregister.h \
     typedef.h

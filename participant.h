@@ -6,29 +6,42 @@
 #include <register.h>
 #include "registrableitem.h"
 
-class Participant : public RegistrableItem<Participant>
+class Participant : public RegistrableItem
 {
+    Q_OBJECT
+
+    Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY firstNameChanged)
+    Q_PROPERTY(QString lastName READ lastName WRITE setLastName NOTIFY lastNameChanged)
+    Q_PROPERTY(bool isSpeaking READ isSpeaking WRITE setIsSpeaking NOTIFY isSpeakingChanged)
+
 public:
-    explicit Participant(ID id = UNDEFINED_ID);
-    ~Participant();
+    explicit Participant(ID id = UNDEFINED_ID, QObject *parent = nullptr);
+    Participant(const Participant &p);
+    ~Participant() = default;
 
-    QString getFirstName() const;
-    QString setFirstName(QString firstName);
+    QString firstName() const;
+    void setFirstName(QString firstName);
 
-    QString getLastName() const;
-    QString setLastName(QString lastName);
+    QString lastName() const;
+    void setLastName(QString lastName);
 
-    bool getIsSpeaking() const;
-    bool setIsSpeaking(bool isSpeaking);
+    bool isSpeaking() const;
+    void setIsSpeaking(bool isSpeaking);
 
-    Duration getTotalSpeakingTime(ID meetingID) const;
+    Duration totalSpeakingTime(ID meetingID) const;
 
     inline void takePartInCurrentMeeting();
 
-    virtual inline bool operator==(const Participant &) override;
+    Participant &operator=(const Participant &p);
+    bool operator==(const Participant &p);
     static void setCurrentMeetingID(ID meetingID);
 
     friend class Register<Participant>;
+
+signals:
+    void firstNameChanged(QString firstName);
+    void lastNameChanged(QString lastName);
+    void isSpeakingChanged(bool isSpeaking);
 
 private:
     QString m_firstName;

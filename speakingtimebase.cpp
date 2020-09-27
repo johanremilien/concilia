@@ -26,10 +26,11 @@ void SpeakingTimeBase::initRegisters()
     }
 }
 
-void SpeakingTimeBase::moveRegisters(std::unique_ptr<ParticipantsRegister> p, std::unique_ptr<MeetingsRegister> m)
+void SpeakingTimeBase::moveRegisters(std::unique_ptr<ParticipantsRegister> participantsRegister,
+                                     std::unique_ptr<MeetingsRegister> meetingsRegister)
 {
-    m_participantsRegister = move(p);
-    m_meetingsRegister = move(m);
+    m_participantsRegister = move(participantsRegister);
+    m_meetingsRegister = move(meetingsRegister);
 }
 
 ParticipantsRegister *SpeakingTimeBase::participantsRegister()

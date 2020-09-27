@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
+#include "speakingtimeregister.h"
 #include "speakingtimerecorder.h"
 #include "speakingtimeanalyser.h"
 
@@ -17,6 +18,9 @@ int main(int argc, char *argv[])
 
     qRegisterMetaType<ID>("ID");
     engine.rootContext()->setContextProperty("UNDEFINED_ID", UNDEFINED_ID);
+
+    SpeakingTimeRegister speakingTimeRegister;
+    engine.rootContext()->setContextProperty("SpeakingTimeRegister", &speakingTimeRegister);
 
     SpeakingTimeRecorder speakingTimeRecorder;
     engine.rootContext()->setContextProperty("SpeakingTimeRecorder", &speakingTimeRecorder);

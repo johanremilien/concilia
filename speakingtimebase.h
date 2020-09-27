@@ -14,7 +14,7 @@ protected:
     SpeakingTimeBase(QObject *parent = nullptr);
     virtual ~SpeakingTimeBase();
     void initRegisters();
-    void moveRegisters(std::unique_ptr<ParticipantsRegister> p,std::unique_ptr<MeetingsRegister> m);
+    void moveRegisters(std::unique_ptr<ParticipantsRegister>, std::unique_ptr<MeetingsRegister>);
     ParticipantsRegister *participantsRegister();
     MeetingsRegister *meetingsRegister();
 

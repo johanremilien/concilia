@@ -3,17 +3,17 @@
 
 const Participant &ParticipantsRegister::create(QString firstName, QString lastName)
 {
-    return rename(create().getId(), firstName, lastName);
+    return rename(create().id(), firstName, lastName);
 }
 
-QString ParticipantsRegister::getFirstName(ID id) const
+QString ParticipantsRegister::firstName(ID id) const
 {
-    return value(id).getFirstName();
+    return value(id).firstName();
 }
 
-QString ParticipantsRegister::getLastName(ID id) const
+QString ParticipantsRegister::lastName(ID id) const
 {
-    return value(id).getLastName();
+    return value(id).lastName();
 }
 
 ID ParticipantsRegister::find(QString firstName, QString lastName) const noexcept
@@ -22,8 +22,8 @@ ID ParticipantsRegister::find(QString firstName, QString lastName) const noexcep
     process([&firstName, &lastName, &result](const Participant & participant)
     {
         bool exitLoop = false;
-        if (participant.getFirstName() == firstName && participant.getLastName() == lastName) {
-            result = participant.getId();
+        if (participant.firstName() == firstName && participant.lastName() == lastName) {
+            result = participant.id();
             exitLoop = true;
         }
         return exitLoop;
@@ -37,8 +37,8 @@ IDs ParticipantsRegister::findByFirstName(QString firstName) const noexcept
     process([&firstName, &result](const Participant &participant)
     {
         bool exitLoop = false;
-        if (participant.getFirstName() == firstName) {
-            result.append(participant.getId());
+        if (participant.firstName() == firstName) {
+            result.append(participant.id());
         }
         return exitLoop;
     });
@@ -51,8 +51,8 @@ IDs ParticipantsRegister::findByLastName(QString lastName) const noexcept
     process([&lastName, &result](const Participant &participant)
     {
         bool exitLoop = false;
-        if (participant.getLastName() == lastName) {
-            result.append(participant.getId());
+        if (participant.lastName() == lastName) {
+            result.append(participant.id());
         }
         return exitLoop;
     });
@@ -65,23 +65,23 @@ IDs ParticipantsRegister::findIncompleteNames(QString firstName, QString lastNam
     process([&firstName, &lastName, &result](const Participant &participant)
     {
         bool exitLoop = false;
-        if (participant.getLastName().contains(firstName) &&
-                participant.getLastName().contains(lastName)) {
-            result.append(participant.getId());
+        if (participant.lastName().contains(firstName) &&
+                participant.lastName().contains(lastName)) {
+            result.append(participant.id());
         }
         return exitLoop;
     });
     return result;
 }
 
-QString ParticipantsRegister::setFirstName(ID id, QString firstName)
+void ParticipantsRegister::setFirstName(ID id, QString firstName)
 {
-    return operator[](id).setFirstName(firstName);
+    operator[](id).setFirstName(firstName);
 }
 
-QString ParticipantsRegister::setLastName(ID id, QString lastName)
+void ParticipantsRegister::setLastName(ID id, QString lastName)
 {
-    return operator[](id).setLastName(lastName);
+    operator[](id).setLastName(lastName);
 }
 
 const Participant &ParticipantsRegister::rename(ID id, QString firstName, QString lastName) noexcept
@@ -98,13 +98,13 @@ const Participant &ParticipantsRegister::rename(ID id, QString firstName, QStrin
     return *participant;
 }
 
-bool ParticipantsRegister::toggleSpeakingState(ID id)
+void ParticipantsRegister::toggleSpeakingState(ID id)
 {
     Participant &participant = operator[](id);
-    return participant.setIsSpeaking(!participant.getIsSpeaking());
+    participant.setIsSpeaking(!participant.isSpeaking());
 }
 
-Duration ParticipantsRegister::getTotalSpeakingTime(ID participantID, ID meetingID) const
+Duration ParticipantsRegister::totalSpeakingTime(ID participantID, ID meetingID) const
 {
-    return value(participantID).getTotalSpeakingTime(meetingID);
+    return value(participantID).totalSpeakingTime(meetingID);
 }
