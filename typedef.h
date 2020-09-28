@@ -18,18 +18,6 @@ class MeetingsRegister;
 typedef qint16 ID;
 typedef quint64 Duration;
 
-/*
-struct DistinctID{
-    DistinctID() : id() {}
-    DistinctID(ID id) : id(id) { }
-    DistinctID(DistinctID &mid) : id(mid.id) { }
-    operator ID&() { return id; }
-    operator ID () { return id; };
-private:
-    ID id;
-};
-*/
-
 typedef struct {
     QDateTime startTime;
     QDateTime endTime;

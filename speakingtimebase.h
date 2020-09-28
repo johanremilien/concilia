@@ -10,17 +10,21 @@ class SpeakingTimeBase : public QObject
 {
     Q_OBJECT
 
+public:
+    ParticipantsRegister &participantsRegister();
+    MeetingsRegister &meetingsRegister();
+    void moveRegistersTo(SpeakingTimeBase &stb);
+    void moveRegistersFrom(SpeakingTimeBase &stb);
+
 protected:
     SpeakingTimeBase(QObject *parent = nullptr);
     virtual ~SpeakingTimeBase();
     void initRegisters();
-    void moveRegisters(std::unique_ptr<ParticipantsRegister>, std::unique_ptr<MeetingsRegister>);
-    ParticipantsRegister &participantsRegister();
-    MeetingsRegister &meetingsRegister();
 
 private:
     template<typename T>
     T &getRegister(std::unique_ptr<T> &tr);
+    void moveRegisters(SpeakingTimeBase &from, SpeakingTimeBase &to);
     std::unique_ptr<ParticipantsRegister> m_participantsRegister;
     std::unique_ptr<MeetingsRegister> m_meetingsRegister;
 };
