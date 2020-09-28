@@ -23,7 +23,7 @@ protected:
     const T &create();
     inline void clear();
     inline void remove(ID id);
-    inline const T &value(ID id) const;
+    inline const T value(ID id) const;
     inline void exception(ID id) const;
     void process(std::function<bool(T &)> f) const;
 
@@ -49,7 +49,7 @@ Register<T>::~Register()
 }
 
 template<typename T>
-const T &Register<T>::value(ID id) const
+const T Register<T>::value(ID id) const
 {
     if (!m_register.contains(id))
         exception(id);

@@ -18,19 +18,22 @@ SpeakingTimeBase::~SpeakingTimeBase()
 
 void SpeakingTimeBase::initRegisters()
 {
-    static bool trigger = false;
-    if (!trigger) {
+    static bool trigger = true;
+    if (trigger) {
         m_participantsRegister = make_unique<ParticipantsRegister>();
         m_meetingsRegister = make_unique<MeetingsRegister>();
         trigger ^= true;
     }
 }
 
-void SpeakingTimeBase::moveRegisters(std::unique_ptr<ParticipantsRegister> participantsRegister,
-                                     std::unique_ptr<MeetingsRegister> meetingsRegister)
+void SpeakingTimeBase::moveRegistersTo(SpeakingTimeBase & stb)
 {
-    m_participantsRegister = move(participantsRegister);
-    m_meetingsRegister = move(meetingsRegister);
+    moveRegisters(*this, stb);
+}
+
+void SpeakingTimeBase::moveRegistersFrom(SpeakingTimeBase &stb)
+{
+    moveRegisters(stb, *this);
 }
 
 ParticipantsRegister &SpeakingTimeBase::participantsRegister()
@@ -41,4 +44,12 @@ ParticipantsRegister &SpeakingTimeBase::participantsRegister()
 MeetingsRegister &SpeakingTimeBase::meetingsRegister()
 {
     return getRegister<MeetingsRegister>(m_meetingsRegister);
+}
+
+void SpeakingTimeBase::moveRegisters(SpeakingTimeBase &from, SpeakingTimeBase &to)
+{
+    if (from.m_participantsRegister == nullptr || from.m_meetingsRegister == nullptr)
+        throw std::runtime_error("invalid attempt to move an unowned register");
+    to.m_participantsRegister = move(from.m_participantsRegister);
+    to.m_meetingsRegister = move(from.m_meetingsRegister);
 }
