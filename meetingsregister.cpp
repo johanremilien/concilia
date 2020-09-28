@@ -7,7 +7,6 @@ const Meeting *MeetingsRegister::create(QString name)
     const Meeting *result;
     if (find(name) == UNDEFINED_ID) {
         result = &create();
-        qDebug() << result->id();
         rename(result->id(), name);
     } else {
         QLatin1Char separartor('_');
