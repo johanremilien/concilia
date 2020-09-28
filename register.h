@@ -85,20 +85,17 @@ template<typename T>
 const T &Register<T>::create()
 {
     m_counter++;
-    qDebug() << m_typeinfo << "create" << m_counter;
     return *(m_register.insert(m_counter, T(m_counter)));
 }
 
 template<typename T>
 void Register<T>::clear() {
-    qDebug() << m_typeinfo << "clear";
     m_register.clear();
     m_counter = 0;
 }
 
 template<typename T>
 void Register<T>::remove(ID id) {
-    qDebug() << m_typeinfo << "remove" << id;
     m_register.take(id);
 }
 

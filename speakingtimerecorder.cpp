@@ -13,30 +13,32 @@ SpeakingTimeRecorder::SpeakingTimeRecorder(QObject *parent) :
 
 SpeakingTimeRecorder::~SpeakingTimeRecorder()
 {
-    silence();
-    endMeeting();
+    if (m_currentMeetingID != UNDEFINED_ID) {
+        silence();
+        endMeeting();
+    }
 }
 
 bool SpeakingTimeRecorder::startMeeting()
 {
-    return meetingsRegister()->start(m_currentMeetingID);
+    return meetingsRegister().start(m_currentMeetingID);
 }
 
 bool SpeakingTimeRecorder::pauseMeeting()
 {
-    return meetingsRegister()->pause(m_currentMeetingID);
+    return meetingsRegister().pause(m_currentMeetingID);
 }
 
 bool SpeakingTimeRecorder::restartMeeting()
 {
-    return meetingsRegister()->restart(m_currentMeetingID);
+    return meetingsRegister().restart(m_currentMeetingID);
 }
 
 bool SpeakingTimeRecorder::endMeeting()
 {
     bool result = false;
     try {
-        result = meetingsRegister()->end(m_currentMeetingID);
+        result = meetingsRegister().end(m_currentMeetingID);
     } catch (...) {
 
     }
@@ -51,7 +53,7 @@ void SpeakingTimeRecorder::silence()
 void SpeakingTimeRecorder::toggleSpeakingState(ID id)
 {
     if (id != UNDEFINED_ID) {
-        participantsRegister()->toggleSpeakingState(id);
+        participantsRegister().toggleSpeakingState(id);
     }
 }
 

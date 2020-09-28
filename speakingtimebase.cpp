@@ -33,14 +33,12 @@ void SpeakingTimeBase::moveRegisters(std::unique_ptr<ParticipantsRegister> parti
     m_meetingsRegister = move(meetingsRegister);
 }
 
-ParticipantsRegister *SpeakingTimeBase::participantsRegister()
+ParticipantsRegister &SpeakingTimeBase::participantsRegister()
 {
-    initRegisters();
-    return m_participantsRegister.get();
+    return getRegister<ParticipantsRegister>(m_participantsRegister);
 }
 
-MeetingsRegister *SpeakingTimeBase::meetingsRegister()
+MeetingsRegister &SpeakingTimeBase::meetingsRegister()
 {
-    initRegisters();
-    return m_meetingsRegister.get();
+    return getRegister<MeetingsRegister>(m_meetingsRegister);
 }
