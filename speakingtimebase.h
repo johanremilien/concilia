@@ -11,8 +11,6 @@ class SpeakingTimeBase : public QObject
     Q_OBJECT
 
 public:
-    ParticipantsRegister &participantsRegister();
-    MeetingsRegister &meetingsRegister();
     void moveRegistersTo(SpeakingTimeBase &stb);
     void moveRegistersFrom(SpeakingTimeBase &stb);
 
@@ -20,6 +18,8 @@ protected:
     SpeakingTimeBase(QObject *parent = nullptr);
     virtual ~SpeakingTimeBase();
     void initRegisters();
+    ParticipantsRegister &participantsRegister();
+    MeetingsRegister &meetingsRegister();
 
 private:
     template<typename T>
