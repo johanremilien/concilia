@@ -6,7 +6,7 @@
 #include "speakingtimerecorder.h"
 #include "speakingtimeanalyser.h"
 
-
+ID UNDEFINED_ID = -1;
 
 int main(int argc, char *argv[])
 {
