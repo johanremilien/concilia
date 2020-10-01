@@ -7,8 +7,6 @@
 
 #include <QDebug>
 
-#define UNDEFINED_ID -1
-
 class Participant;
 class Meeting;
 
@@ -16,6 +14,8 @@ class ParticipantsRegister;
 class MeetingsRegister;
 
 typedef qint16 ID;
+extern ID UNDEFINED_ID;
+
 typedef quint64 Duration;
 
 typedef struct {
