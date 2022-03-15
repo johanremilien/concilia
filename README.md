@@ -1,8 +1,7 @@
 # concilia
 
-<a href="https://www.codefactor.io/repository/github/johanremilien/concilia" alt="codefactor">
-   <img src="https://www.codefactor.io/repository/github/johanremilien/concilia/badge"/>
-</a>
+[![codefactor](https://www.codefactor.io/repository/github/johanremilien/concilia/badge)](https://www.codefactor.io/repository/github/johanremilien/concilia)
+[![CodeQL](https://github.com/johanremilien/concilia/workflows/CodeQL/badge.svg)](https://github.com/johanremilien/concilia/actions?query=workflow%3ACodeQL)
 
 **concilia** will be a software for monitoring the speaking time of participants in a meeting.
 
