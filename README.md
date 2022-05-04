@@ -1,6 +1,7 @@
 # concilia
 
 [![codefactor](https://www.codefactor.io/repository/github/johanremilien/concilia/badge)](https://www.codefactor.io/repository/github/johanremilien/concilia)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/e42ae211b0db4f689f8e3f30ba477a39)](https://www.codacy.com/gh/johanremilien/concilia/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=johanremilien/concilia&amp;utm_campaign=Badge_Grade)
 [![CodeQL](https://github.com/johanremilien/concilia/workflows/CodeQL/badge.svg)](https://github.com/johanremilien/concilia/actions?query=workflow%3ACodeQL)
 [![BCH compliance](https://bettercodehub.com/edge/badge/johanremilien/concilia?branch=master)](https://bettercodehub.com/results/johanremilien/concilia)
 
